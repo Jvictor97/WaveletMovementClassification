@@ -1,0 +1,1497 @@
+\documentclass[11pt]{article}
+
+    \usepackage[breakable]{tcolorbox}
+    \usepackage{parskip} % Stop auto-indenting (to mimic markdown behaviour)
+    
+    \usepackage{iftex}
+    \ifPDFTeX
+    	\usepackage[T1]{fontenc}
+    	\usepackage{mathpazo}
+    \else
+    	\usepackage{fontspec}
+    \fi
+
+    % Basic figure setup, for now with no caption control since it's done
+    % automatically by Pandoc (which extracts ![](path) syntax from Markdown).
+    \usepackage{graphicx}
+    % Maintain compatibility with old templates. Remove in nbconvert 6.0
+    \let\Oldincludegraphics\includegraphics
+    % Ensure that by default, figures have no caption (until we provide a
+    % proper Figure object with a Caption API and a way to capture that
+    % in the conversion process - todo).
+    \usepackage{caption}
+    \DeclareCaptionFormat{nocaption}{}
+    \captionsetup{format=nocaption,aboveskip=0pt,belowskip=0pt}
+
+    \usepackage{float}
+    \floatplacement{figure}{H} % forces figures to be placed at the correct location
+    \usepackage{xcolor} % Allow colors to be defined
+    \usepackage{enumerate} % Needed for markdown enumerations to work
+    \usepackage{geometry} % Used to adjust the document margins
+    \usepackage{amsmath} % Equations
+    \usepackage{amssymb} % Equations
+    \usepackage{textcomp} % defines textquotesingle
+    % Hack from http://tex.stackexchange.com/a/47451/13684:
+    \AtBeginDocument{%
+        \def\PYZsq{\textquotesingle}% Upright quotes in Pygmentized code
+    }
+    \usepackage{upquote} % Upright quotes for verbatim code
+    \usepackage{eurosym} % defines \euro
+    \usepackage[mathletters]{ucs} % Extended unicode (utf-8) support
+    \usepackage{fancyvrb} % verbatim replacement that allows latex
+    \usepackage{grffile} % extends the file name processing of package graphics 
+                         % to support a larger range
+    \makeatletter % fix for old versions of grffile with XeLaTeX
+    \@ifpackagelater{grffile}{2019/11/01}
+    {
+      % Do nothing on new versions
+    }
+    {
+      \def\Gread@@xetex#1{%
+        \IfFileExists{"\Gin@base".bb}%
+        {\Gread@eps{\Gin@base.bb}}%
+        {\Gread@@xetex@aux#1}%
+      }
+    }
+    \makeatother
+    \usepackage[Export]{adjustbox} % Used to constrain images to a maximum size
+    \adjustboxset{max size={0.9\linewidth}{0.9\paperheight}}
+
+    % The hyperref package gives us a pdf with properly built
+    % internal navigation ('pdf bookmarks' for the table of contents,
+    % internal cross-reference links, web links for URLs, etc.)
+    \usepackage{hyperref}
+    % The default LaTeX title has an obnoxious amount of whitespace. By default,
+    % titling removes some of it. It also provides customization options.
+    \usepackage{titling}
+    \usepackage{longtable} % longtable support required by pandoc >1.10
+    \usepackage{booktabs}  % table support for pandoc > 1.12.2
+    \usepackage[inline]{enumitem} % IRkernel/repr support (it uses the enumerate* environment)
+    \usepackage[normalem]{ulem} % ulem is needed to support strikethroughs (\sout)
+                                % normalem makes italics be italics, not underlines
+    \usepackage{mathrsfs}
+    
+
+    
+    % Colors for the hyperref package
+    \definecolor{urlcolor}{rgb}{0,.145,.698}
+    \definecolor{linkcolor}{rgb}{.71,0.21,0.01}
+    \definecolor{citecolor}{rgb}{.12,.54,.11}
+
+    % ANSI colors
+    \definecolor{ansi-black}{HTML}{3E424D}
+    \definecolor{ansi-black-intense}{HTML}{282C36}
+    \definecolor{ansi-red}{HTML}{E75C58}
+    \definecolor{ansi-red-intense}{HTML}{B22B31}
+    \definecolor{ansi-green}{HTML}{00A250}
+    \definecolor{ansi-green-intense}{HTML}{007427}
+    \definecolor{ansi-yellow}{HTML}{DDB62B}
+    \definecolor{ansi-yellow-intense}{HTML}{B27D12}
+    \definecolor{ansi-blue}{HTML}{208FFB}
+    \definecolor{ansi-blue-intense}{HTML}{0065CA}
+    \definecolor{ansi-magenta}{HTML}{D160C4}
+    \definecolor{ansi-magenta-intense}{HTML}{A03196}
+    \definecolor{ansi-cyan}{HTML}{60C6C8}
+    \definecolor{ansi-cyan-intense}{HTML}{258F8F}
+    \definecolor{ansi-white}{HTML}{C5C1B4}
+    \definecolor{ansi-white-intense}{HTML}{A1A6B2}
+    \definecolor{ansi-default-inverse-fg}{HTML}{FFFFFF}
+    \definecolor{ansi-default-inverse-bg}{HTML}{000000}
+
+    % common color for the border for error outputs.
+    \definecolor{outerrorbackground}{HTML}{FFDFDF}
+
+    % commands and environments needed by pandoc snippets
+    % extracted from the output of `pandoc -s`
+    \providecommand{\tightlist}{%
+      \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+    \DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+    % Add ',fontsize=\small' for more characters per line
+    \newenvironment{Shaded}{}{}
+    \newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{\textbf{{#1}}}}
+    \newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.56,0.13,0.00}{{#1}}}
+    \newcommand{\DecValTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{{#1}}}
+    \newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{{#1}}}
+    \newcommand{\FloatTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{{#1}}}
+    \newcommand{\CharTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{{#1}}}
+    \newcommand{\StringTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{{#1}}}
+    \newcommand{\CommentTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textit{{#1}}}}
+    \newcommand{\OtherTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{{#1}}}
+    \newcommand{\AlertTok}[1]{\textcolor[rgb]{1.00,0.00,0.00}{\textbf{{#1}}}}
+    \newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.02,0.16,0.49}{{#1}}}
+    \newcommand{\RegionMarkerTok}[1]{{#1}}
+    \newcommand{\ErrorTok}[1]{\textcolor[rgb]{1.00,0.00,0.00}{\textbf{{#1}}}}
+    \newcommand{\NormalTok}[1]{{#1}}
+    
+    % Additional commands for more recent versions of Pandoc
+    \newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.53,0.00,0.00}{{#1}}}
+    \newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{{#1}}}
+    \newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{{#1}}}
+    \newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.73,0.40,0.53}{{#1}}}
+    \newcommand{\ImportTok}[1]{{#1}}
+    \newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.73,0.13,0.13}{\textit{{#1}}}}
+    \newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{{#1}}}}}
+    \newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{{#1}}}}}
+    \newcommand{\VariableTok}[1]{\textcolor[rgb]{0.10,0.09,0.49}{{#1}}}
+    \newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{\textbf{{#1}}}}
+    \newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.40,0.40,0.40}{{#1}}}
+    \newcommand{\BuiltInTok}[1]{{#1}}
+    \newcommand{\ExtensionTok}[1]{{#1}}
+    \newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.74,0.48,0.00}{{#1}}}
+    \newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.49,0.56,0.16}{{#1}}}
+    \newcommand{\InformationTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{{#1}}}}}
+    \newcommand{\WarningTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{{#1}}}}}
+    
+    
+    % Define a nice break command that doesn't care if a line doesn't already
+    % exist.
+    \def\br{\hspace*{\fill} \\* }
+    % Math Jax compatibility definitions
+    \def\gt{>}
+    \def\lt{<}
+    \let\Oldtex\TeX
+    \let\Oldlatex\LaTeX
+    \renewcommand{\TeX}{\textrm{\Oldtex}}
+    \renewcommand{\LaTeX}{\textrm{\Oldlatex}}
+    % Document parameters
+    % Document title
+    \title{Projeto}
+    
+    
+    
+    
+    
+% Pygments definitions
+\makeatletter
+\def\PY@reset{\let\PY@it=\relax \let\PY@bf=\relax%
+    \let\PY@ul=\relax \let\PY@tc=\relax%
+    \let\PY@bc=\relax \let\PY@ff=\relax}
+\def\PY@tok#1{\csname PY@tok@#1\endcsname}
+\def\PY@toks#1+{\ifx\relax#1\empty\else%
+    \PY@tok{#1}\expandafter\PY@toks\fi}
+\def\PY@do#1{\PY@bc{\PY@tc{\PY@ul{%
+    \PY@it{\PY@bf{\PY@ff{#1}}}}}}}
+\def\PY#1#2{\PY@reset\PY@toks#1+\relax+\PY@do{#2}}
+
+\expandafter\def\csname PY@tok@w\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.73,0.73}{##1}}}
+\expandafter\def\csname PY@tok@c\endcsname{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.25,0.50,0.50}{##1}}}
+\expandafter\def\csname PY@tok@cp\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.74,0.48,0.00}{##1}}}
+\expandafter\def\csname PY@tok@k\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@kp\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@kt\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.69,0.00,0.25}{##1}}}
+\expandafter\def\csname PY@tok@o\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\expandafter\def\csname PY@tok@ow\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.67,0.13,1.00}{##1}}}
+\expandafter\def\csname PY@tok@nb\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@nf\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,1.00}{##1}}}
+\expandafter\def\csname PY@tok@nc\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,1.00}{##1}}}
+\expandafter\def\csname PY@tok@nn\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,1.00}{##1}}}
+\expandafter\def\csname PY@tok@ne\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.82,0.25,0.23}{##1}}}
+\expandafter\def\csname PY@tok@nv\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\expandafter\def\csname PY@tok@no\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.53,0.00,0.00}{##1}}}
+\expandafter\def\csname PY@tok@nl\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.63,0.63,0.00}{##1}}}
+\expandafter\def\csname PY@tok@ni\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.60,0.60,0.60}{##1}}}
+\expandafter\def\csname PY@tok@na\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.49,0.56,0.16}{##1}}}
+\expandafter\def\csname PY@tok@nt\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@nd\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.67,0.13,1.00}{##1}}}
+\expandafter\def\csname PY@tok@s\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@sd\endcsname{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@si\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.73,0.40,0.53}{##1}}}
+\expandafter\def\csname PY@tok@se\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.73,0.40,0.13}{##1}}}
+\expandafter\def\csname PY@tok@sr\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.40,0.53}{##1}}}
+\expandafter\def\csname PY@tok@ss\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\expandafter\def\csname PY@tok@sx\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@m\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\expandafter\def\csname PY@tok@gh\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,0.50}{##1}}}
+\expandafter\def\csname PY@tok@gu\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.50,0.00,0.50}{##1}}}
+\expandafter\def\csname PY@tok@gd\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.63,0.00,0.00}{##1}}}
+\expandafter\def\csname PY@tok@gi\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.63,0.00}{##1}}}
+\expandafter\def\csname PY@tok@gr\endcsname{\def\PY@tc##1{\textcolor[rgb]{1.00,0.00,0.00}{##1}}}
+\expandafter\def\csname PY@tok@ge\endcsname{\let\PY@it=\textit}
+\expandafter\def\csname PY@tok@gs\endcsname{\let\PY@bf=\textbf}
+\expandafter\def\csname PY@tok@gp\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,0.50}{##1}}}
+\expandafter\def\csname PY@tok@go\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.53,0.53,0.53}{##1}}}
+\expandafter\def\csname PY@tok@gt\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.27,0.87}{##1}}}
+\expandafter\def\csname PY@tok@err\endcsname{\def\PY@bc##1{\setlength{\fboxsep}{0pt}\fcolorbox[rgb]{1.00,0.00,0.00}{1,1,1}{\strut ##1}}}
+\expandafter\def\csname PY@tok@kc\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@kd\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@kn\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@kr\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@bp\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@fm\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,1.00}{##1}}}
+\expandafter\def\csname PY@tok@vc\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\expandafter\def\csname PY@tok@vg\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\expandafter\def\csname PY@tok@vi\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\expandafter\def\csname PY@tok@vm\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\expandafter\def\csname PY@tok@sa\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@sb\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@sc\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@dl\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@s2\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@sh\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@s1\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@mb\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\expandafter\def\csname PY@tok@mf\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\expandafter\def\csname PY@tok@mh\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\expandafter\def\csname PY@tok@mi\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\expandafter\def\csname PY@tok@il\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\expandafter\def\csname PY@tok@mo\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\expandafter\def\csname PY@tok@ch\endcsname{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.25,0.50,0.50}{##1}}}
+\expandafter\def\csname PY@tok@cm\endcsname{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.25,0.50,0.50}{##1}}}
+\expandafter\def\csname PY@tok@cpf\endcsname{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.25,0.50,0.50}{##1}}}
+\expandafter\def\csname PY@tok@c1\endcsname{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.25,0.50,0.50}{##1}}}
+\expandafter\def\csname PY@tok@cs\endcsname{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.25,0.50,0.50}{##1}}}
+
+\def\PYZbs{\char`\\}
+\def\PYZus{\char`\_}
+\def\PYZob{\char`\{}
+\def\PYZcb{\char`\}}
+\def\PYZca{\char`\^}
+\def\PYZam{\char`\&}
+\def\PYZlt{\char`\<}
+\def\PYZgt{\char`\>}
+\def\PYZsh{\char`\#}
+\def\PYZpc{\char`\%}
+\def\PYZdl{\char`\$}
+\def\PYZhy{\char`\-}
+\def\PYZsq{\char`\'}
+\def\PYZdq{\char`\"}
+\def\PYZti{\char`\~}
+% for compatibility with earlier versions
+\def\PYZat{@}
+\def\PYZlb{[}
+\def\PYZrb{]}
+\makeatother
+
+
+    % For linebreaks inside Verbatim environment from package fancyvrb. 
+    \makeatletter
+        \newbox\Wrappedcontinuationbox 
+        \newbox\Wrappedvisiblespacebox 
+        \newcommand*\Wrappedvisiblespace {\textcolor{red}{\textvisiblespace}} 
+        \newcommand*\Wrappedcontinuationsymbol {\textcolor{red}{\llap{\tiny$\m@th\hookrightarrow$}}} 
+        \newcommand*\Wrappedcontinuationindent {3ex } 
+        \newcommand*\Wrappedafterbreak {\kern\Wrappedcontinuationindent\copy\Wrappedcontinuationbox} 
+        % Take advantage of the already applied Pygments mark-up to insert 
+        % potential linebreaks for TeX processing. 
+        %        {, <, #, %, $, ' and ": go to next line. 
+        %        _, }, ^, &, >, - and ~: stay at end of broken line. 
+        % Use of \textquotesingle for straight quote. 
+        \newcommand*\Wrappedbreaksatspecials {% 
+            \def\PYGZus{\discretionary{\char`\_}{\Wrappedafterbreak}{\char`\_}}% 
+            \def\PYGZob{\discretionary{}{\Wrappedafterbreak\char`\{}{\char`\{}}% 
+            \def\PYGZcb{\discretionary{\char`\}}{\Wrappedafterbreak}{\char`\}}}% 
+            \def\PYGZca{\discretionary{\char`\^}{\Wrappedafterbreak}{\char`\^}}% 
+            \def\PYGZam{\discretionary{\char`\&}{\Wrappedafterbreak}{\char`\&}}% 
+            \def\PYGZlt{\discretionary{}{\Wrappedafterbreak\char`\<}{\char`\<}}% 
+            \def\PYGZgt{\discretionary{\char`\>}{\Wrappedafterbreak}{\char`\>}}% 
+            \def\PYGZsh{\discretionary{}{\Wrappedafterbreak\char`\#}{\char`\#}}% 
+            \def\PYGZpc{\discretionary{}{\Wrappedafterbreak\char`\%}{\char`\%}}% 
+            \def\PYGZdl{\discretionary{}{\Wrappedafterbreak\char`\$}{\char`\$}}% 
+            \def\PYGZhy{\discretionary{\char`\-}{\Wrappedafterbreak}{\char`\-}}% 
+            \def\PYGZsq{\discretionary{}{\Wrappedafterbreak\textquotesingle}{\textquotesingle}}% 
+            \def\PYGZdq{\discretionary{}{\Wrappedafterbreak\char`\"}{\char`\"}}% 
+            \def\PYGZti{\discretionary{\char`\~}{\Wrappedafterbreak}{\char`\~}}% 
+        } 
+        % Some characters . , ; ? ! / are not pygmentized. 
+        % This macro makes them "active" and they will insert potential linebreaks 
+        \newcommand*\Wrappedbreaksatpunct {% 
+            \lccode`\~`\.\lowercase{\def~}{\discretionary{\hbox{\char`\.}}{\Wrappedafterbreak}{\hbox{\char`\.}}}% 
+            \lccode`\~`\,\lowercase{\def~}{\discretionary{\hbox{\char`\,}}{\Wrappedafterbreak}{\hbox{\char`\,}}}% 
+            \lccode`\~`\;\lowercase{\def~}{\discretionary{\hbox{\char`\;}}{\Wrappedafterbreak}{\hbox{\char`\;}}}% 
+            \lccode`\~`\:\lowercase{\def~}{\discretionary{\hbox{\char`\:}}{\Wrappedafterbreak}{\hbox{\char`\:}}}% 
+            \lccode`\~`\?\lowercase{\def~}{\discretionary{\hbox{\char`\?}}{\Wrappedafterbreak}{\hbox{\char`\?}}}% 
+            \lccode`\~`\!\lowercase{\def~}{\discretionary{\hbox{\char`\!}}{\Wrappedafterbreak}{\hbox{\char`\!}}}% 
+            \lccode`\~`\/\lowercase{\def~}{\discretionary{\hbox{\char`\/}}{\Wrappedafterbreak}{\hbox{\char`\/}}}% 
+            \catcode`\.\active
+            \catcode`\,\active 
+            \catcode`\;\active
+            \catcode`\:\active
+            \catcode`\?\active
+            \catcode`\!\active
+            \catcode`\/\active 
+            \lccode`\~`\~ 	
+        }
+    \makeatother
+
+    \let\OriginalVerbatim=\Verbatim
+    \makeatletter
+    \renewcommand{\Verbatim}[1][1]{%
+        %\parskip\z@skip
+        \sbox\Wrappedcontinuationbox {\Wrappedcontinuationsymbol}%
+        \sbox\Wrappedvisiblespacebox {\FV@SetupFont\Wrappedvisiblespace}%
+        \def\FancyVerbFormatLine ##1{\hsize\linewidth
+            \vtop{\raggedright\hyphenpenalty\z@\exhyphenpenalty\z@
+                \doublehyphendemerits\z@\finalhyphendemerits\z@
+                \strut ##1\strut}%
+        }%
+        % If the linebreak is at a space, the latter will be displayed as visible
+        % space at end of first line, and a continuation symbol starts next line.
+        % Stretch/shrink are however usually zero for typewriter font.
+        \def\FV@Space {%
+            \nobreak\hskip\z@ plus\fontdimen3\font minus\fontdimen4\font
+            \discretionary{\copy\Wrappedvisiblespacebox}{\Wrappedafterbreak}
+            {\kern\fontdimen2\font}%
+        }%
+        
+        % Allow breaks at special characters using \PYG... macros.
+        \Wrappedbreaksatspecials
+        % Breaks at punctuation characters . , ; ? ! and / need catcode=\active 	
+        \OriginalVerbatim[#1,codes*=\Wrappedbreaksatpunct]%
+    }
+    \makeatother
+
+    % Exact colors from NB
+    \definecolor{incolor}{HTML}{303F9F}
+    \definecolor{outcolor}{HTML}{D84315}
+    \definecolor{cellborder}{HTML}{CFCFCF}
+    \definecolor{cellbackground}{HTML}{F7F7F7}
+    
+    % prompt
+    \makeatletter
+    \newcommand{\boxspacing}{\kern\kvtcb@left@rule\kern\kvtcb@boxsep}
+    \makeatother
+    \newcommand{\prompt}[4]{
+        {\ttfamily\llap{{\color{#2}[#3]:\hspace{3pt}#4}}\vspace{-\baselineskip}}
+    }
+    
+
+    
+    % Prevent overflowing lines due to hard-to-break entities
+    \sloppy 
+    % Setup hyperref package
+    \hypersetup{
+      breaklinks=true,  % so long urls are correctly broken across lines
+      colorlinks=true,
+      urlcolor=urlcolor,
+      linkcolor=linkcolor,
+      citecolor=citecolor,
+      }
+    % Slightly bigger margins than the latex defaults
+    
+    \geometry{verbose,tmargin=1in,bmargin=1in,lmargin=1in,rmargin=1in}
+    
+    
+
+\begin{document}
+    
+    \maketitle
+    
+    
+
+    
+    \hypertarget{resumo}{%
+\section{Resumo}\label{resumo}}
+
+    
+
+    \hypertarget{introduuxe7uxe3o}{%
+\section{Introdução}\label{introduuxe7uxe3o}}
+
+    Sinais de sEMG podem ser amplamente utilizados em diversas aplicações
+como sistemas para reabilitação, controle de membros robóticos e de
+próteses mecânicas \hyperref[1]{[1]}\hyperref[2]{[2]}. Para um correto
+controle das próteses, é necessário que seja possível identificar os
+movimentos realizados pelo paciente com precisão e uma forma de realizar
+essa identificação é por meio de algoritmos de Inteligência Artificial.
+Diversos trabalhos propuseram metodologias de processamento de sinais
+
+    \hypertarget{metodologia}{%
+\section{Metodologia}\label{metodologia}}
+
+    Foi realizado o processamento dos sinais de EMG utilizando a
+Transformada Discreta de Wavelet (TDW) e os coeficientes obtidos foram
+utilizados como entradas para um Perceptron Multicamadas (MLP) para a
+classificação em 6 possíveis categorias de movimento, sendo:
+
+\begin{longtable}[]{@{}ll@{}}
+\toprule
+Código & Pegada/Classe\tabularnewline
+\midrule
+\endhead
+0 & Cilíndrica\tabularnewline
+1 & Pinça\tabularnewline
+2 & Gancho\tabularnewline
+3 & Palmar\tabularnewline
+4 & Esférica\tabularnewline
+5 & Lateral\tabularnewline
+\bottomrule
+\end{longtable}
+
+Os demais tópicos dessa seção estão organizados da seguinte forma: A
+subseção \hyperref[wavelet]{Wavelet} explica como foi utilizada a TDW
+
+Assuntos - Wavelet - MLP - Aumentar a base de dados - Utilizar o
+transformada wavelet no caso do EMG, ou densidade espectral nas 5 faixas
+específicas do EEG como features
+
+    \hypertarget{resultados}{%
+\section{Resultados}\label{resultados}}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{ }{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+
+\end{Verbatim}
+\end{tcolorbox}
+
+    \hypertarget{conclusuxe3o}{%
+\section{Conclusão}\label{conclusuxe3o}}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{ }{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+
+\end{Verbatim}
+\end{tcolorbox}
+
+    \hypertarget{metodologia}{%
+\section{Metodologia}\label{metodologia}}
+
+    \begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  Será utilizado o método Wavelet para calcular os coeficientes dos
+  dados de entrada para cada canal
+\item
+  Para cada coeficiente (6) retornados será calculado o valor médio
+\item
+  Os dois vetores de 6 médias (1 para cada canal) serão concatenados e
+  usados como entrada para o MLP
+\end{enumerate}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{2}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{k+kn}{import} \PY{n+nn}{pywt}
+\PY{k+kn}{import} \PY{n+nn}{scipy}\PY{n+nn}{.}\PY{n+nn}{io}
+\PY{k+kn}{from} \PY{n+nn}{sklearn}\PY{n+nn}{.}\PY{n+nn}{neural\PYZus{}network} \PY{k+kn}{import} \PY{n}{MLPClassifier}
+\PY{k+kn}{import} \PY{n+nn}{matplotlib}\PY{n+nn}{.}\PY{n+nn}{pyplot} \PY{k}{as} \PY{n+nn}{plt}
+\PY{k+kn}{import} \PY{n+nn}{numpy} \PY{k}{as} \PY{n+nn}{np}
+\PY{k+kn}{import} \PY{n+nn}{pandas} \PY{k}{as} \PY{n+nn}{pd}
+\PY{k+kn}{from} \PY{n+nn}{sklearn}\PY{n+nn}{.}\PY{n+nn}{model\PYZus{}selection} \PY{k+kn}{import} \PY{n}{train\PYZus{}test\PYZus{}split}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{3}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{file} \PY{o}{=} \PY{n}{scipy}\PY{o}{.}\PY{n}{io}\PY{o}{.}\PY{n}{loadmat}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{./EMG\PYZus{}Dataset/Database1/male\PYZus{}1.mat}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{4}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{levels} \PY{o}{=} \PY{l+m+mi}{3}
+\PY{n}{mother\PYZus{}function} \PY{o}{=} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{coif5}\PY{l+s+s1}{\PYZsq{}}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{5}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{movements} \PY{o}{=} \PY{p}{\PYZob{}}
+    \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{cyl}\PY{l+s+s1}{\PYZsq{}}\PY{p}{:} \PY{p}{\PYZob{}}
+        \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{c1}\PY{l+s+s1}{\PYZsq{}}\PY{p}{:} \PY{n}{np}\PY{o}{.}\PY{n}{array}\PY{p}{(}\PY{n}{file}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{cyl\PYZus{}ch1}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{:}\PY{l+m+mi}{30}\PY{p}{]}\PY{p}{)}\PY{p}{,}
+        \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{c2}\PY{l+s+s1}{\PYZsq{}}\PY{p}{:} \PY{n}{np}\PY{o}{.}\PY{n}{array}\PY{p}{(}\PY{n}{file}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{cyl\PYZus{}ch2}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{:}\PY{l+m+mi}{30}\PY{p}{]}\PY{p}{)}
+    \PY{p}{\PYZcb{}}\PY{p}{,}
+    \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{tip}\PY{l+s+s1}{\PYZsq{}}\PY{p}{:} \PY{p}{\PYZob{}}
+        \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{c1}\PY{l+s+s1}{\PYZsq{}}\PY{p}{:} \PY{n}{np}\PY{o}{.}\PY{n}{array}\PY{p}{(}\PY{n}{file}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{tip\PYZus{}ch1}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{:}\PY{l+m+mi}{30}\PY{p}{]}\PY{p}{)}\PY{p}{,}
+        \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{c2}\PY{l+s+s1}{\PYZsq{}}\PY{p}{:} \PY{n}{np}\PY{o}{.}\PY{n}{array}\PY{p}{(}\PY{n}{file}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{tip\PYZus{}ch2}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{:}\PY{l+m+mi}{30}\PY{p}{]}\PY{p}{)}
+    \PY{p}{\PYZcb{}}\PY{p}{,}
+    \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{hook}\PY{l+s+s1}{\PYZsq{}}\PY{p}{:} \PY{p}{\PYZob{}}
+        \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{c1}\PY{l+s+s1}{\PYZsq{}}\PY{p}{:} \PY{n}{np}\PY{o}{.}\PY{n}{array}\PY{p}{(}\PY{n}{file}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{hook\PYZus{}ch1}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{:}\PY{l+m+mi}{30}\PY{p}{]}\PY{p}{)}\PY{p}{,}
+        \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{c2}\PY{l+s+s1}{\PYZsq{}}\PY{p}{:} \PY{n}{np}\PY{o}{.}\PY{n}{array}\PY{p}{(}\PY{n}{file}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{hook\PYZus{}ch2}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{:}\PY{l+m+mi}{30}\PY{p}{]}\PY{p}{)}
+    \PY{p}{\PYZcb{}}\PY{p}{,}
+    \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{palm}\PY{l+s+s1}{\PYZsq{}}\PY{p}{:} \PY{p}{\PYZob{}}
+        \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{c1}\PY{l+s+s1}{\PYZsq{}}\PY{p}{:} \PY{n}{np}\PY{o}{.}\PY{n}{array}\PY{p}{(}\PY{n}{file}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{palm\PYZus{}ch1}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{:}\PY{l+m+mi}{30}\PY{p}{]}\PY{p}{)}\PY{p}{,}
+        \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{c2}\PY{l+s+s1}{\PYZsq{}}\PY{p}{:} \PY{n}{np}\PY{o}{.}\PY{n}{array}\PY{p}{(}\PY{n}{file}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{palm\PYZus{}ch2}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{:}\PY{l+m+mi}{30}\PY{p}{]}\PY{p}{)}
+    \PY{p}{\PYZcb{}}\PY{p}{,}
+    \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{spher}\PY{l+s+s1}{\PYZsq{}}\PY{p}{:} \PY{p}{\PYZob{}}
+        \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{c1}\PY{l+s+s1}{\PYZsq{}}\PY{p}{:} \PY{n}{np}\PY{o}{.}\PY{n}{array}\PY{p}{(}\PY{n}{file}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{spher\PYZus{}ch1}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{:}\PY{l+m+mi}{30}\PY{p}{]}\PY{p}{)}\PY{p}{,}
+        \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{c2}\PY{l+s+s1}{\PYZsq{}}\PY{p}{:} \PY{n}{np}\PY{o}{.}\PY{n}{array}\PY{p}{(}\PY{n}{file}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{spher\PYZus{}ch2}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{:}\PY{l+m+mi}{30}\PY{p}{]}\PY{p}{)}
+    \PY{p}{\PYZcb{}}\PY{p}{,}
+    \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{lat}\PY{l+s+s1}{\PYZsq{}}\PY{p}{:} \PY{p}{\PYZob{}}
+        \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{c1}\PY{l+s+s1}{\PYZsq{}}\PY{p}{:} \PY{n}{np}\PY{o}{.}\PY{n}{array}\PY{p}{(}\PY{n}{file}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{lat\PYZus{}ch1}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{:}\PY{l+m+mi}{30}\PY{p}{]}\PY{p}{)}\PY{p}{,}
+        \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{c2}\PY{l+s+s1}{\PYZsq{}}\PY{p}{:} \PY{n}{np}\PY{o}{.}\PY{n}{array}\PY{p}{(}\PY{n}{file}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{lat\PYZus{}ch2}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{:}\PY{l+m+mi}{30}\PY{p}{]}\PY{p}{)}
+    \PY{p}{\PYZcb{}}
+\PY{p}{\PYZcb{}}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{6}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{coefs} \PY{o}{=} \PY{p}{\PYZob{}}
+    \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{cyl}\PY{l+s+s1}{\PYZsq{}}\PY{p}{:} \PY{p}{[}\PY{p}{]}\PY{p}{,}
+    \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{tip}\PY{l+s+s1}{\PYZsq{}}\PY{p}{:} \PY{p}{[}\PY{p}{]}\PY{p}{,}
+    \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{hook}\PY{l+s+s1}{\PYZsq{}}\PY{p}{:} \PY{p}{[}\PY{p}{]}\PY{p}{,}
+    \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{palm}\PY{l+s+s1}{\PYZsq{}}\PY{p}{:} \PY{p}{[}\PY{p}{]}\PY{p}{,}
+    \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{spher}\PY{l+s+s1}{\PYZsq{}}\PY{p}{:} \PY{p}{[}\PY{p}{]}\PY{p}{,}
+    \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{lat}\PY{l+s+s1}{\PYZsq{}}\PY{p}{:} \PY{p}{[}\PY{p}{]}
+\PY{p}{\PYZcb{}}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{7}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{out\PYZus{}counter} \PY{o}{=} \PY{l+m+mi}{0}
+\PY{k}{for} \PY{n}{movement}\PY{p}{,} \PY{n}{channels} \PY{o+ow}{in} \PY{n}{movements}\PY{o}{.}\PY{n}{items}\PY{p}{(}\PY{p}{)}\PY{p}{:}
+    \PY{n}{experiments\PYZus{}c1} \PY{o}{=} \PY{n}{channels}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{c1}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}
+    \PY{n}{experiments\PYZus{}c2} \PY{o}{=} \PY{n}{channels}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{c2}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}
+    
+    \PY{k}{for} \PY{n}{experiment} \PY{o+ow}{in} \PY{n+nb}{range}\PY{p}{(}\PY{l+m+mi}{30}\PY{p}{)}\PY{p}{:}
+        \PY{n}{c1} \PY{o}{=} \PY{n}{experiments\PYZus{}c1}\PY{p}{[}\PY{n}{experiment}\PY{p}{]}
+        \PY{n}{c2} \PY{o}{=} \PY{n}{experiments\PYZus{}c2}\PY{p}{[}\PY{n}{experiment}\PY{p}{]}
+
+        \PY{n}{coefficients} \PY{o}{=} \PY{n}{pywt}\PY{o}{.}\PY{n}{wavedec}\PY{p}{(}\PY{n}{c1}\PY{p}{,} \PY{n}{mother\PYZus{}function}\PY{p}{,} \PY{n}{level}\PY{o}{=}\PY{n}{levels}\PY{p}{)} \PY{o}{+} \PY{n}{pywt}\PY{o}{.}\PY{n}{wavedec}\PY{p}{(}\PY{n}{c2}\PY{p}{,} \PY{n}{mother\PYZus{}function}\PY{p}{,} \PY{n}{level}\PY{o}{=}\PY{n}{levels}\PY{p}{)}
+        \PY{n}{max\PYZus{}coefs} \PY{o}{=} \PY{p}{[}\PY{p}{]}
+        \PY{k}{for} \PY{n}{coefficient} \PY{o+ow}{in} \PY{n}{coefficients}\PY{p}{:}
+            \PY{n}{max\PYZus{}coef} \PY{o}{=} \PY{n+nb}{max}\PY{p}{(}\PY{n}{coefficient}\PY{p}{)}
+
+            \PY{n}{max\PYZus{}coefs}\PY{o}{.}\PY{n}{append}\PY{p}{(}\PY{n}{max\PYZus{}coef}\PY{p}{)}
+
+        \PY{n}{coefs}\PY{p}{[}\PY{n}{movement}\PY{p}{]}\PY{o}{.}\PY{n}{append}\PY{p}{(}\PY{n}{max\PYZus{}coefs}\PY{p}{)}
+        
+    \PY{n}{coefs}\PY{p}{[}\PY{n}{movement}\PY{p}{]} \PY{o}{=} \PY{n}{pd}\PY{o}{.}\PY{n}{DataFrame}\PY{p}{(}\PY{n}{coefs}\PY{p}{[}\PY{n}{movement}\PY{p}{]}\PY{p}{)}
+    \PY{n}{coefs}\PY{p}{[}\PY{n}{movement}\PY{p}{]}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{out}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]} \PY{o}{=} \PY{n}{out\PYZus{}counter}
+    \PY{n}{out\PYZus{}counter} \PY{o}{+}\PY{o}{=} \PY{l+m+mi}{1}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{8}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{dataset} \PY{o}{=} \PY{n}{pd}\PY{o}{.}\PY{n}{DataFrame}\PY{p}{(}\PY{p}{)}
+\PY{k}{for} \PY{n}{key}\PY{p}{,} \PY{n}{data} \PY{o+ow}{in} \PY{n}{coefs}\PY{o}{.}\PY{n}{items}\PY{p}{(}\PY{p}{)}\PY{p}{:}
+    \PY{n}{dataset} \PY{o}{=} \PY{n}{dataset}\PY{o}{.}\PY{n}{append}\PY{p}{(}\PY{n}{data}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{9}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{y} \PY{o}{=} \PY{n}{dataset}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{out}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}
+\PY{n}{x} \PY{o}{=} \PY{n}{dataset}\PY{o}{.}\PY{n}{drop}\PY{p}{(}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{out}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{,} \PY{n}{axis}\PY{o}{=}\PY{l+m+mi}{1}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \hypertarget{testes}{%
+\section{Testes}\label{testes}}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{12}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{x\PYZus{}train}\PY{p}{,} \PY{n}{x\PYZus{}test}\PY{p}{,} \PY{n}{y\PYZus{}train}\PY{p}{,} \PY{n}{y\PYZus{}test} \PY{o}{=} \PY{n}{train\PYZus{}test\PYZus{}split}\PY{p}{(}\PY{n}{x}\PY{p}{,} \PY{n}{y}\PY{p}{,} \PY{n}{test\PYZus{}size}\PY{o}{=}\PY{l+m+mf}{0.5}\PY{p}{)}
+\PY{n}{mlp} \PY{o}{=} \PY{n}{MLPClassifier}\PY{p}{(}
+    \PY{n}{hidden\PYZus{}layer\PYZus{}sizes}\PY{o}{=}\PY{p}{(}\PY{l+m+mi}{9}\PY{p}{,}\PY{l+m+mi}{9}\PY{p}{,}\PY{l+m+mi}{9}\PY{p}{)}\PY{p}{,} 
+    \PY{n}{max\PYZus{}iter}\PY{o}{=}\PY{l+m+mi}{10000}\PY{p}{,} 
+    \PY{n}{learning\PYZus{}rate\PYZus{}init}\PY{o}{=}\PY{l+m+mf}{0.005}\PY{p}{,} 
+    \PY{c+c1}{\PYZsh{}tol=1e\PYZhy{}7, }
+    \PY{c+c1}{\PYZsh{}warm\PYZus{}start=True,}
+    \PY{n}{n\PYZus{}iter\PYZus{}no\PYZus{}change}\PY{o}{=}\PY{l+m+mi}{100}
+    \PY{c+c1}{\PYZsh{}verbose=True}
+\PY{p}{)}
+\PY{n}{mlp}\PY{o}{.}\PY{n}{fit}\PY{p}{(}\PY{n}{x\PYZus{}train}\PY{p}{,} \PY{n}{y\PYZus{}train}\PY{p}{)}
+\PY{n}{mlp}\PY{o}{.}\PY{n}{score}\PY{p}{(}\PY{n}{x\PYZus{}test}\PY{p}{,} \PY{n}{y\PYZus{}test}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+            \begin{tcolorbox}[breakable, size=fbox, boxrule=.5pt, pad at break*=1mm, opacityfill=0]
+\prompt{Out}{outcolor}{12}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+0.9
+\end{Verbatim}
+\end{tcolorbox}
+        
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{ }{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{mlp}\PY{o}{.}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{ }{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+
+\end{Verbatim}
+\end{tcolorbox}
+
+    
+
+    \cite{castro_semg_2014}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{ }{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+
+\end{Verbatim}
+\end{tcolorbox}
+
+    \hypertarget{bibliografia}{%
+\section{Bibliografia}\label{bibliografia}}
+
+    {[}1{]} C. Sapsanis, G. Georgoulas, e A. Tzes, ``EMG based
+classification of basic hand movements based on time-frequency
+features'', in 21st Mediterranean Conference on Control and Automation,
+Platanias, Chania - Crete, Greece, jun. 2013, p.~716--722, doi:
+10.1109/MED.2013.6608802.
+
+{[}2{]} M. C. F. Castro, E. L. Colombini, P. T. Junior, S. P. Arjunan, e
+D. K. Kumar, ``sEMG feature evaluation for identification of elbow angle
+resolution in graded arm movement'', BioMed Eng OnLine, vol.~13, nº 1,
+p.~155, 2014, doi: 10.1186/1475-925X-13-155.
+
+{[}3{]} F. Duan, L. Dai, W. Chang, Z. Chen, C. Zhu, e W. Li,
+``sEMG-Based Identification of Hand Motion Commands Using Wavelet Neural
+Network Combined With Discrete Wavelet Transform'', IEEE Trans. Ind.
+Electron., vol.~63, nº 3, p.~1923--1934, mar. 2016, doi:
+10.1109/TIE.2015.2497212.
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{12}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{o}{\PYZpc{}\PYZpc{}}\PY{k}{cmd}
+ipython nbconvert \PYZhy{}\PYZhy{}to latex \PYZhy{}\PYZhy{}template mytemplate.tplx Projeto.ipynb
+pdflatex Projeto.tex
+bibtex Projeto
+pdflatex Projeto.tex
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+Microsoft Windows [versÃ£o 10.0.19042.685]
+(c) 2020 Microsoft Corporation. Todos os direitos reservados.
+
+C:\textbackslash{}Dev\textbackslash{}FEI\textbackslash{}Mestrado\textbackslash{}3\_Periodo\textbackslash{}PEL301\_Biopotenciais\textbackslash{}Projeto>ipython nbconvert
+--to latex --template mytemplate.tplx Projeto.ipynb
+
+C:\textbackslash{}Dev\textbackslash{}FEI\textbackslash{}Mestrado\textbackslash{}3\_Periodo\textbackslash{}PEL301\_Biopotenciais\textbackslash{}Projeto>pdflatex Projeto.tex
+This is pdfTeX, Version 3.14159265-2.6-1.40.21 (MiKTeX 20.11)
+entering extended mode
+(Projeto.tex
+LaTeX2e <2020-10-01> patch level 2
+L3 programming layer <2020-12-07> xparse <2020-03-03>
+("C:\textbackslash{}Users\textbackslash{}JoÃ£o Victor\textbackslash{}AppData\textbackslash{}Local\textbackslash{}Programs\textbackslash{}MiKTeX\textbackslash{}tex/latex/base\textbackslash{}article.cl
+s"
+Document Class: article 2020/04/10 v1.4m Standard LaTeX document class
+("C:\textbackslash{}Users\textbackslash{}JoÃ£o Victor\textbackslash{}AppData\textbackslash{}Local\textbackslash{}Programs\textbackslash{}MiKTeX\textbackslash{}tex/latex/base\textbackslash{}size11.clo
+"))
+("C:\textbackslash{}Users\textbackslash{}JoÃ£o Victor\textbackslash{}AppData\textbackslash{}Local\textbackslash{}Programs\textbackslash{}MiKTeX\textbackslash{}tex/latex/tcolorbox\textbackslash{}tcolo
+rbox.sty"
+("C:\textbackslash{}Users\textbackslash{}JoÃ£o Victor\textbackslash{}AppData\textbackslash{}Local\textbackslash{}Programs\textbackslash{}MiKTeX\textbackslash{}tex/latex/pgf/basiclayer\textbackslash{}
+pgf.sty"
+("C:\textbackslash{}Users\textbackslash{}JoÃ£o Victor\textbackslash{}AppData\textbackslash{}Local\textbackslash{}Programs\textbackslash{}MiKTeX\textbackslash{}tex/latex/pgf/utilities\textbackslash{}p
+gfrcs.sty"
+("C:\textbackslash{}Users\textbackslash{}JoÃ£o Victor\textbackslash{}AppData\textbackslash{}Local\textbackslash{}Programs\textbackslash{}MiKTeX\textbackslash{}tex/generic/pgf/utilities
+\textbackslash{}pgfutil-common.tex"
+("C:\textbackslash{}Users\textbackslash{}JoÃ£o Victor\textbackslash{}AppData\textbackslash{}Local\textbackslash{}Programs\textbackslash{}MiKTeX\textbackslash{}tex/generic/pgf/utilities
+\textbackslash{}pgfutil-common-lists.tex"))
+("C:\textbackslash{}Users\textbackslash{}JoÃ£o Victor\textbackslash{}AppData\textbackslash{}Local\textbackslash{}Programs\textbackslash{}MiKTeX\textbackslash{}tex/generic/pgf/utilities
+\textbackslash{}pgfutil-latex.def")
+("C:\textbackslash{}Users\textbackslash{}JoÃ£o Victor\textbackslash{}AppData\textbackslash{}Local\textbackslash{}Programs\textbackslash{}MiKTeX\textbackslash{}tex/generic/pgf/utilities
+\textbackslash{}pgfrcs.code.tex"
+("C:\textbackslash{}Users\textbackslash{}JoÃ£o Victor\textbackslash{}AppData\textbackslash{}Local\textbackslash{}Programs\textbackslash{}MiKTeX\textbackslash{}tex/generic/pgf\textbackslash{}pgf.revis
+ion.tex")))
+("C:\textbackslash{}Users\textbackslash{}JoÃ£o Victor\textbackslash{}AppData\textbackslash{}Local\textbackslash{}Programs\textbackslash{}MiKTeX\textbackslash{}tex/latex/pgf/basiclayer\textbackslash{}
+pgfcore.sty"
+("C:\textbackslash{}Users\textbackslash{}JoÃ£o Victor\textbackslash{}AppData\textbackslash{}Local\textbackslash{}Programs\textbackslash{}MiKTeX\textbackslash{}tex/latex/graphics\textbackslash{}graphi
+cx.sty"
+("C:\textbackslash{}Users\textbackslash{}JoÃ£o Victor\textbackslash{}AppData\textbackslash{}Local\textbackslash{}Programs\textbackslash{}MiKTeX\textbackslash{}tex/latex/graphics\textbackslash{}keyval
+.sty")
+("C:\textbackslash{}Users\textbackslash{}JoÃ£o Victor\textbackslash{}AppData\textbackslash{}Local\textbackslash{}Programs\textbackslash{}MiKTeX\textbackslash{}tex/latex/graphics\textbackslash{}graphi
+cs.sty"
+("C:\textbackslash{}Users\textbackslash{}JoÃ£o Victor\textbackslash{}AppData\textbackslash{}Local\textbackslash{}Programs\textbackslash{}MiKTeX\textbackslash{}tex/latex/graphics\textbackslash{}trig.s
+ty")
+("C:\textbackslash{}Users\textbackslash{}JoÃ£o Victor\textbackslash{}AppData\textbackslash{}Local\textbackslash{}Programs\textbackslash{}MiKTeX\textbackslash{}tex/latex/graphics-cfg\textbackslash{}gr
+aphics.cfg")
+("C:\textbackslash{}Users\textbackslash{}JoÃ£o Victor\textbackslash{}AppData\textbackslash{}Local\textbackslash{}Programs\textbackslash{}MiKTeX\textbackslash{}tex/latex/graphics-def\textbackslash{}pd
+ftex.def")))
+("C:\textbackslash{}Users\textbackslash{}JoÃ£o Victor\textbackslash{}AppData\textbackslash{}Local\textbackslash{}Programs\textbackslash{}MiKTeX\textbackslash{}tex/latex/pgf/systemlayer
+\textbackslash{}pgfsys.sty"
+("C:\textbackslash{}Users\textbackslash{}JoÃ£o Victor\textbackslash{}AppData\textbackslash{}Local\textbackslash{}Programs\textbackslash{}MiKTeX\textbackslash{}tex/generic/pgf/systemlay
+er\textbackslash{}pgfsys.code.tex"
+("C:\textbackslash{}Users\textbackslash{}JoÃ£o Victor\textbackslash{}AppData\textbackslash{}Local\textbackslash{}Programs\textbackslash{}MiKTeX\textbackslash{}tex/generic/pgf/utilities
+\textbackslash{}pgfkeys.code.tex"
+("C:\textbackslash{}Users\textbackslash{}JoÃ£o Victor\textbackslash{}AppData\textbackslash{}Local\textbackslash{}Programs\textbackslash{}MiKTeX\textbackslash{}tex/generic/pgf/utilities
+\textbackslash{}pgfkeysfiltered.code.tex"))
+("C:\textbackslash{}Users\textbackslash{}JoÃ£o Victor\textbackslash{}AppData\textbackslash{}Local\textbackslash{}Programs\textbackslash{}MiKTeX\textbackslash{}tex/generic/pgf/systemlay
+er\textbackslash{}pgf.cfg")
+("C:\textbackslash{}Users\textbackslash{}JoÃ£o Victor\textbackslash{}AppData\textbackslash{}Local\textbackslash{}Programs\textbackslash{}MiKTeX\textbackslash{}tex/generic/pgf/systemlay
+er\textbackslash{}pgfsys-pdftex.def"
+("C:\textbackslash{}Users\textbackslash{}JoÃ£o Victor\textbackslash{}AppData\textbackslash{}Local\textbackslash{}Programs\textbackslash{}MiKTeX\textbackslash{}tex/generic/pgf/systemlay
+er\textbackslash{}pgfsys-common-pdf.def")))
+("C:\textbackslash{}Users\textbackslash{}JoÃ£o Victor\textbackslash{}AppData\textbackslash{}Local\textbackslash{}Programs\textbackslash{}MiKTeX\textbackslash{}tex/generic/pgf/systemlay
+er\textbackslash{}pgfsyssoftpath.code.tex")
+("C:\textbackslash{}Users\textbackslash{}JoÃ£o Victor\textbackslash{}AppData\textbackslash{}Local\textbackslash{}Programs\textbackslash{}MiKTeX\textbackslash{}tex/generic/pgf/systemlay
+er\textbackslash{}pgfsysprotocol.code.tex"))
+("C:\textbackslash{}Users\textbackslash{}JoÃ£o Victor\textbackslash{}AppData\textbackslash{}Local\textbackslash{}Programs\textbackslash{}MiKTeX\textbackslash{}tex/latex/xcolor\textbackslash{}xcolor.s
+ty"
+("C:\textbackslash{}Users\textbackslash{}JoÃ£o Victor\textbackslash{}AppData\textbackslash{}Local\textbackslash{}Programs\textbackslash{}MiKTeX\textbackslash{}tex/latex/graphics-cfg\textbackslash{}co
+lor.cfg"))
+("C:\textbackslash{}Users\textbackslash{}JoÃ£o Victor\textbackslash{}AppData\textbackslash{}Local\textbackslash{}Programs\textbackslash{}MiKTeX\textbackslash{}tex/generic/pgf/basiclaye
+r\textbackslash{}pgfcore.code.tex"
+("C:\textbackslash{}Users\textbackslash{}JoÃ£o Victor\textbackslash{}AppData\textbackslash{}Local\textbackslash{}Programs\textbackslash{}MiKTeX\textbackslash{}tex/generic/pgf/math\textbackslash{}pgfm
+ath.code.tex"
+("C:\textbackslash{}Users\textbackslash{}JoÃ£o Victor\textbackslash{}AppData\textbackslash{}Local\textbackslash{}Programs\textbackslash{}MiKTeX\textbackslash{}tex/generic/pgf/math\textbackslash{}pgfm
+athcalc.code.tex"
+("C:\textbackslash{}Users\textbackslash{}JoÃ£o Victor\textbackslash{}AppData\textbackslash{}Local\textbackslash{}Programs\textbackslash{}MiKTeX\textbackslash{}tex/generic/pgf/math\textbackslash{}pgfm
+athutil.code.tex")
+("C:\textbackslash{}Users\textbackslash{}JoÃ£o Victor\textbackslash{}AppData\textbackslash{}Local\textbackslash{}Programs\textbackslash{}MiKTeX\textbackslash{}tex/generic/pgf/math\textbackslash{}pgfm
+athparser.code.tex")
+("C:\textbackslash{}Users\textbackslash{}JoÃ£o Victor\textbackslash{}AppData\textbackslash{}Local\textbackslash{}Programs\textbackslash{}MiKTeX\textbackslash{}tex/generic/pgf/math\textbackslash{}pgfm
+athfunctions.code.tex"
+("C:\textbackslash{}Users\textbackslash{}JoÃ£o Victor\textbackslash{}AppData\textbackslash{}Local\textbackslash{}Programs\textbackslash{}MiKTeX\textbackslash{}tex/generic/pgf/math\textbackslash{}pgfm
+athfunctions.basic.code.tex")
+("C:\textbackslash{}Users\textbackslash{}JoÃ£o Victor\textbackslash{}AppData\textbackslash{}Local\textbackslash{}Programs\textbackslash{}MiKTeX\textbackslash{}tex/generic/pgf/math\textbackslash{}pgfm
+athfunctions.trigonometric.code.tex")
+("C:\textbackslash{}Users\textbackslash{}JoÃ£o Victor\textbackslash{}AppData\textbackslash{}Local\textbackslash{}Programs\textbackslash{}MiKTeX\textbackslash{}tex/generic/pgf/math\textbackslash{}pgfm
+athfunctions.random.code.tex")
+("C:\textbackslash{}Users\textbackslash{}JoÃ£o Victor\textbackslash{}AppData\textbackslash{}Local\textbackslash{}Programs\textbackslash{}MiKTeX\textbackslash{}tex/generic/pgf/math\textbackslash{}pgfm
+athfunctions.comparison.code.tex")
+("C:\textbackslash{}Users\textbackslash{}JoÃ£o Victor\textbackslash{}AppData\textbackslash{}Local\textbackslash{}Programs\textbackslash{}MiKTeX\textbackslash{}tex/generic/pgf/math\textbackslash{}pgfm
+athfunctions.base.code.tex")
+("C:\textbackslash{}Users\textbackslash{}JoÃ£o Victor\textbackslash{}AppData\textbackslash{}Local\textbackslash{}Programs\textbackslash{}MiKTeX\textbackslash{}tex/generic/pgf/math\textbackslash{}pgfm
+athfunctions.round.code.tex")
+("C:\textbackslash{}Users\textbackslash{}JoÃ£o Victor\textbackslash{}AppData\textbackslash{}Local\textbackslash{}Programs\textbackslash{}MiKTeX\textbackslash{}tex/generic/pgf/math\textbackslash{}pgfm
+athfunctions.misc.code.tex")
+("C:\textbackslash{}Users\textbackslash{}JoÃ£o Victor\textbackslash{}AppData\textbackslash{}Local\textbackslash{}Programs\textbackslash{}MiKTeX\textbackslash{}tex/generic/pgf/math\textbackslash{}pgfm
+athfunctions.integerarithmetics.code.tex")))
+("C:\textbackslash{}Users\textbackslash{}JoÃ£o Victor\textbackslash{}AppData\textbackslash{}Local\textbackslash{}Programs\textbackslash{}MiKTeX\textbackslash{}tex/generic/pgf/math\textbackslash{}pgfm
+athfloat.code.tex"))
+("C:\textbackslash{}Users\textbackslash{}JoÃ£o Victor\textbackslash{}AppData\textbackslash{}Local\textbackslash{}Programs\textbackslash{}MiKTeX\textbackslash{}tex/generic/pgf/math\textbackslash{}pgfi
+nt.code.tex")
+("C:\textbackslash{}Users\textbackslash{}JoÃ£o Victor\textbackslash{}AppData\textbackslash{}Local\textbackslash{}Programs\textbackslash{}MiKTeX\textbackslash{}tex/generic/pgf/basiclaye
+r\textbackslash{}pgfcorepoints.code.tex")
+("C:\textbackslash{}Users\textbackslash{}JoÃ£o Victor\textbackslash{}AppData\textbackslash{}Local\textbackslash{}Programs\textbackslash{}MiKTeX\textbackslash{}tex/generic/pgf/basiclaye
+r\textbackslash{}pgfcorepathconstruct.code.tex")
+("C:\textbackslash{}Users\textbackslash{}JoÃ£o Victor\textbackslash{}AppData\textbackslash{}Local\textbackslash{}Programs\textbackslash{}MiKTeX\textbackslash{}tex/generic/pgf/basiclaye
+r\textbackslash{}pgfcorepathusage.code.tex")
+("C:\textbackslash{}Users\textbackslash{}JoÃ£o Victor\textbackslash{}AppData\textbackslash{}Local\textbackslash{}Programs\textbackslash{}MiKTeX\textbackslash{}tex/generic/pgf/basiclaye
+r\textbackslash{}pgfcorescopes.code.tex")
+("C:\textbackslash{}Users\textbackslash{}JoÃ£o Victor\textbackslash{}AppData\textbackslash{}Local\textbackslash{}Programs\textbackslash{}MiKTeX\textbackslash{}tex/generic/pgf/basiclaye
+r\textbackslash{}pgfcoregraphicstate.code.tex")
+("C:\textbackslash{}Users\textbackslash{}JoÃ£o Victor\textbackslash{}AppData\textbackslash{}Local\textbackslash{}Programs\textbackslash{}MiKTeX\textbackslash{}tex/generic/pgf/basiclaye
+r\textbackslash{}pgfcoretransformations.code.tex")
+("C:\textbackslash{}Users\textbackslash{}JoÃ£o Victor\textbackslash{}AppData\textbackslash{}Local\textbackslash{}Programs\textbackslash{}MiKTeX\textbackslash{}tex/generic/pgf/basiclaye
+r\textbackslash{}pgfcorequick.code.tex")
+("C:\textbackslash{}Users\textbackslash{}JoÃ£o Victor\textbackslash{}AppData\textbackslash{}Local\textbackslash{}Programs\textbackslash{}MiKTeX\textbackslash{}tex/generic/pgf/basiclaye
+r\textbackslash{}pgfcoreobjects.code.tex")
+("C:\textbackslash{}Users\textbackslash{}JoÃ£o Victor\textbackslash{}AppData\textbackslash{}Local\textbackslash{}Programs\textbackslash{}MiKTeX\textbackslash{}tex/generic/pgf/basiclaye
+r\textbackslash{}pgfcorepathprocessing.code.tex")
+("C:\textbackslash{}Users\textbackslash{}JoÃ£o Victor\textbackslash{}AppData\textbackslash{}Local\textbackslash{}Programs\textbackslash{}MiKTeX\textbackslash{}tex/generic/pgf/basiclaye
+r\textbackslash{}pgfcorearrows.code.tex")
+("C:\textbackslash{}Users\textbackslash{}JoÃ£o Victor\textbackslash{}AppData\textbackslash{}Local\textbackslash{}Programs\textbackslash{}MiKTeX\textbackslash{}tex/generic/pgf/basiclaye
+r\textbackslash{}pgfcoreshade.code.tex")
+("C:\textbackslash{}Users\textbackslash{}JoÃ£o Victor\textbackslash{}AppData\textbackslash{}Local\textbackslash{}Programs\textbackslash{}MiKTeX\textbackslash{}tex/generic/pgf/basiclaye
+r\textbackslash{}pgfcoreimage.code.tex"
+("C:\textbackslash{}Users\textbackslash{}JoÃ£o Victor\textbackslash{}AppData\textbackslash{}Local\textbackslash{}Programs\textbackslash{}MiKTeX\textbackslash{}tex/generic/pgf/basiclaye
+r\textbackslash{}pgfcoreexternal.code.tex"))
+("C:\textbackslash{}Users\textbackslash{}JoÃ£o Victor\textbackslash{}AppData\textbackslash{}Local\textbackslash{}Programs\textbackslash{}MiKTeX\textbackslash{}tex/generic/pgf/basiclaye
+r\textbackslash{}pgfcorelayers.code.tex")
+("C:\textbackslash{}Users\textbackslash{}JoÃ£o Victor\textbackslash{}AppData\textbackslash{}Local\textbackslash{}Programs\textbackslash{}MiKTeX\textbackslash{}tex/generic/pgf/basiclaye
+r\textbackslash{}pgfcoretransparency.code.tex")
+("C:\textbackslash{}Users\textbackslash{}JoÃ£o Victor\textbackslash{}AppData\textbackslash{}Local\textbackslash{}Programs\textbackslash{}MiKTeX\textbackslash{}tex/generic/pgf/basiclaye
+r\textbackslash{}pgfcorepatterns.code.tex")
+("C:\textbackslash{}Users\textbackslash{}JoÃ£o Victor\textbackslash{}AppData\textbackslash{}Local\textbackslash{}Programs\textbackslash{}MiKTeX\textbackslash{}tex/generic/pgf/basiclaye
+r\textbackslash{}pgfcorerdf.code.tex")))
+("C:\textbackslash{}Users\textbackslash{}JoÃ£o Victor\textbackslash{}AppData\textbackslash{}Local\textbackslash{}Programs\textbackslash{}MiKTeX\textbackslash{}tex/generic/pgf/modules\textbackslash{}p
+gfmoduleshapes.code.tex")
+("C:\textbackslash{}Users\textbackslash{}JoÃ£o Victor\textbackslash{}AppData\textbackslash{}Local\textbackslash{}Programs\textbackslash{}MiKTeX\textbackslash{}tex/generic/pgf/modules\textbackslash{}p
+gfmoduleplot.code.tex")
+("C:\textbackslash{}Users\textbackslash{}JoÃ£o Victor\textbackslash{}AppData\textbackslash{}Local\textbackslash{}Programs\textbackslash{}MiKTeX\textbackslash{}tex/latex/pgf/compatibili
+ty\textbackslash{}pgfcomp-version-0-65.sty")
+("C:\textbackslash{}Users\textbackslash{}JoÃ£o Victor\textbackslash{}AppData\textbackslash{}Local\textbackslash{}Programs\textbackslash{}MiKTeX\textbackslash{}tex/latex/pgf/compatibili
+ty\textbackslash{}pgfcomp-version-1-18.sty"))
+("C:\textbackslash{}Users\textbackslash{}JoÃ£o Victor\textbackslash{}AppData\textbackslash{}Local\textbackslash{}Programs\textbackslash{}MiKTeX\textbackslash{}tex/latex/tools\textbackslash{}verbatim.
+sty")
+("C:\textbackslash{}Users\textbackslash{}JoÃ£o Victor\textbackslash{}AppData\textbackslash{}Local\textbackslash{}Programs\textbackslash{}MiKTeX\textbackslash{}tex/latex/environ\textbackslash{}environ
+.sty"
+("C:\textbackslash{}Users\textbackslash{}JoÃ£o Victor\textbackslash{}AppData\textbackslash{}Local\textbackslash{}Programs\textbackslash{}MiKTeX\textbackslash{}tex/latex/trimspaces\textbackslash{}trim
+spaces.sty"))
+("C:\textbackslash{}Users\textbackslash{}JoÃ£o Victor\textbackslash{}AppData\textbackslash{}Local\textbackslash{}Programs\textbackslash{}MiKTeX\textbackslash{}tex/latex/etoolbox\textbackslash{}etoolb
+ox.sty")
+("C:\textbackslash{}Users\textbackslash{}JoÃ£o Victor\textbackslash{}AppData\textbackslash{}Local\textbackslash{}Programs\textbackslash{}MiKTeX\textbackslash{}tex/latex/tcolorbox\textbackslash{}tcbbr
+eakable.code.tex"
+Library (tcolorbox): 'tcbbreakable.code.tex' version '4.42'
+
+("C:\textbackslash{}Users\textbackslash{}JoÃ£o Victor\textbackslash{}AppData\textbackslash{}Local\textbackslash{}Programs\textbackslash{}MiKTeX\textbackslash{}tex/generic/oberdiek\textbackslash{}pdfc
+ol.sty"
+("C:\textbackslash{}Users\textbackslash{}JoÃ£o Victor\textbackslash{}AppData\textbackslash{}Local\textbackslash{}Programs\textbackslash{}MiKTeX\textbackslash{}tex/generic/ltxcmds\textbackslash{}ltxcm
+ds.sty")
+("C:\textbackslash{}Users\textbackslash{}JoÃ£o Victor\textbackslash{}AppData\textbackslash{}Local\textbackslash{}Programs\textbackslash{}MiKTeX\textbackslash{}tex/generic/infwarerr\textbackslash{}inf
+warerr.sty")
+("C:\textbackslash{}Users\textbackslash{}JoÃ£o Victor\textbackslash{}AppData\textbackslash{}Local\textbackslash{}Programs\textbackslash{}MiKTeX\textbackslash{}tex/generic/iftex\textbackslash{}iftex.s
+ty"))))
+("C:\textbackslash{}Users\textbackslash{}JoÃ£o Victor\textbackslash{}AppData\textbackslash{}Local\textbackslash{}Programs\textbackslash{}MiKTeX\textbackslash{}tex/latex/parskip\textbackslash{}parskip
+.sty"
+("C:\textbackslash{}Users\textbackslash{}JoÃ£o Victor\textbackslash{}AppData\textbackslash{}Local\textbackslash{}Programs\textbackslash{}MiKTeX\textbackslash{}tex/latex/kvoptions\textbackslash{}kvopt
+ions.sty"
+("C:\textbackslash{}Users\textbackslash{}JoÃ£o Victor\textbackslash{}AppData\textbackslash{}Local\textbackslash{}Programs\textbackslash{}MiKTeX\textbackslash{}tex/generic/kvsetkeys\textbackslash{}kvs
+etkeys.sty")))
+("C:\textbackslash{}Users\textbackslash{}JoÃ£o Victor\textbackslash{}AppData\textbackslash{}Local\textbackslash{}Programs\textbackslash{}MiKTeX\textbackslash{}tex/latex/base\textbackslash{}fontenc.st
+y")
+("C:\textbackslash{}Users\textbackslash{}JoÃ£o Victor\textbackslash{}AppData\textbackslash{}Local\textbackslash{}Programs\textbackslash{}MiKTeX\textbackslash{}tex/latex/psnfss\textbackslash{}mathpazo
+.sty")
+("C:\textbackslash{}Users\textbackslash{}JoÃ£o Victor\textbackslash{}AppData\textbackslash{}Local\textbackslash{}Programs\textbackslash{}MiKTeX\textbackslash{}tex/latex/caption\textbackslash{}caption
+.sty"
+("C:\textbackslash{}Users\textbackslash{}JoÃ£o Victor\textbackslash{}AppData\textbackslash{}Local\textbackslash{}Programs\textbackslash{}MiKTeX\textbackslash{}tex/latex/caption\textbackslash{}caption
+3.sty"))
+("C:\textbackslash{}Users\textbackslash{}JoÃ£o Victor\textbackslash{}AppData\textbackslash{}Local\textbackslash{}Programs\textbackslash{}MiKTeX\textbackslash{}tex/latex/float\textbackslash{}float.sty
+")
+("C:\textbackslash{}Users\textbackslash{}JoÃ£o Victor\textbackslash{}AppData\textbackslash{}Local\textbackslash{}Programs\textbackslash{}MiKTeX\textbackslash{}tex/latex/tools\textbackslash{}enumerate
+.sty")
+("C:\textbackslash{}Users\textbackslash{}JoÃ£o Victor\textbackslash{}AppData\textbackslash{}Local\textbackslash{}Programs\textbackslash{}MiKTeX\textbackslash{}tex/latex/geometry\textbackslash{}geomet
+ry.sty"
+("C:\textbackslash{}Users\textbackslash{}JoÃ£o Victor\textbackslash{}AppData\textbackslash{}Local\textbackslash{}Programs\textbackslash{}MiKTeX\textbackslash{}tex/generic/iftex\textbackslash{}ifvtex.
+sty")
+("C:\textbackslash{}Users\textbackslash{}JoÃ£o Victor\textbackslash{}AppData\textbackslash{}Local\textbackslash{}Programs\textbackslash{}MiKTeX\textbackslash{}tex/latex/geometry\textbackslash{}geomet
+ry.cfg"))
+("C:\textbackslash{}Users\textbackslash{}JoÃ£o Victor\textbackslash{}AppData\textbackslash{}Local\textbackslash{}Programs\textbackslash{}MiKTeX\textbackslash{}tex/latex/amsmath\textbackslash{}amsmath
+.sty"
+For additional information on amsmath, use the `?' option.
+
+("C:\textbackslash{}Users\textbackslash{}JoÃ£o Victor\textbackslash{}AppData\textbackslash{}Local\textbackslash{}Programs\textbackslash{}MiKTeX\textbackslash{}tex/latex/amsmath\textbackslash{}amstext
+.sty"
+("C:\textbackslash{}Users\textbackslash{}JoÃ£o Victor\textbackslash{}AppData\textbackslash{}Local\textbackslash{}Programs\textbackslash{}MiKTeX\textbackslash{}tex/latex/amsmath\textbackslash{}amsgen.
+sty"))
+("C:\textbackslash{}Users\textbackslash{}JoÃ£o Victor\textbackslash{}AppData\textbackslash{}Local\textbackslash{}Programs\textbackslash{}MiKTeX\textbackslash{}tex/latex/amsmath\textbackslash{}amsbsy.
+sty")
+("C:\textbackslash{}Users\textbackslash{}JoÃ£o Victor\textbackslash{}AppData\textbackslash{}Local\textbackslash{}Programs\textbackslash{}MiKTeX\textbackslash{}tex/latex/amsmath\textbackslash{}amsopn.
+sty"))
+("C:\textbackslash{}Users\textbackslash{}JoÃ£o Victor\textbackslash{}AppData\textbackslash{}Local\textbackslash{}Programs\textbackslash{}MiKTeX\textbackslash{}tex/latex/amsfonts\textbackslash{}amssym
+b.sty"
+("C:\textbackslash{}Users\textbackslash{}JoÃ£o Victor\textbackslash{}AppData\textbackslash{}Local\textbackslash{}Programs\textbackslash{}MiKTeX\textbackslash{}tex/latex/amsfonts\textbackslash{}amsfon
+ts.sty"))
+("C:\textbackslash{}Users\textbackslash{}JoÃ£o Victor\textbackslash{}AppData\textbackslash{}Local\textbackslash{}Programs\textbackslash{}MiKTeX\textbackslash{}tex/latex/base\textbackslash{}textcomp.s
+ty")
+("C:\textbackslash{}Users\textbackslash{}JoÃ£o Victor\textbackslash{}AppData\textbackslash{}Local\textbackslash{}Programs\textbackslash{}MiKTeX\textbackslash{}tex/latex/upquote\textbackslash{}upquote
+.sty")
+("C:\textbackslash{}Users\textbackslash{}JoÃ£o Victor\textbackslash{}AppData\textbackslash{}Local\textbackslash{}Programs\textbackslash{}MiKTeX\textbackslash{}tex/latex/eurosym\textbackslash{}eurosym
+.sty")
+("C:\textbackslash{}Users\textbackslash{}JoÃ£o Victor\textbackslash{}AppData\textbackslash{}Local\textbackslash{}Programs\textbackslash{}MiKTeX\textbackslash{}tex/latex/ucs\textbackslash{}ucs.sty"
+("C:\textbackslash{}Users\textbackslash{}JoÃ£o Victor\textbackslash{}AppData\textbackslash{}Local\textbackslash{}Programs\textbackslash{}MiKTeX\textbackslash{}tex/latex/ucs\textbackslash{}uni-global.
+def"))
+("C:\textbackslash{}Users\textbackslash{}JoÃ£o Victor\textbackslash{}AppData\textbackslash{}Local\textbackslash{}Programs\textbackslash{}MiKTeX\textbackslash{}tex/latex/fancyvrb\textbackslash{}fancyv
+rb.sty")
+("C:\textbackslash{}Users\textbackslash{}JoÃ£o Victor\textbackslash{}AppData\textbackslash{}Local\textbackslash{}Programs\textbackslash{}MiKTeX\textbackslash{}tex/latex/grffile\textbackslash{}grffile
+.sty")
+("C:\textbackslash{}Users\textbackslash{}JoÃ£o Victor\textbackslash{}AppData\textbackslash{}Local\textbackslash{}Programs\textbackslash{}MiKTeX\textbackslash{}tex/latex/adjustbox\textbackslash{}adjus
+tbox.sty"
+("C:\textbackslash{}Users\textbackslash{}JoÃ£o Victor\textbackslash{}AppData\textbackslash{}Local\textbackslash{}Programs\textbackslash{}MiKTeX\textbackslash{}tex/latex/xkeyval\textbackslash{}xkeyval
+.sty"
+("C:\textbackslash{}Users\textbackslash{}JoÃ£o Victor\textbackslash{}AppData\textbackslash{}Local\textbackslash{}Programs\textbackslash{}MiKTeX\textbackslash{}tex/generic/xkeyval\textbackslash{}xkeyv
+al.tex"
+("C:\textbackslash{}Users\textbackslash{}JoÃ£o Victor\textbackslash{}AppData\textbackslash{}Local\textbackslash{}Programs\textbackslash{}MiKTeX\textbackslash{}tex/generic/xkeyval\textbackslash{}xkvut
+ils.tex")))
+("C:\textbackslash{}Users\textbackslash{}JoÃ£o Victor\textbackslash{}AppData\textbackslash{}Local\textbackslash{}Programs\textbackslash{}MiKTeX\textbackslash{}tex/latex/adjustbox\textbackslash{}adjca
+lc.sty")
+("C:\textbackslash{}Users\textbackslash{}JoÃ£o Victor\textbackslash{}AppData\textbackslash{}Local\textbackslash{}Programs\textbackslash{}MiKTeX\textbackslash{}tex/latex/adjustbox\textbackslash{}trimc
+lip.sty"
+("C:\textbackslash{}Users\textbackslash{}JoÃ£o Victor\textbackslash{}AppData\textbackslash{}Local\textbackslash{}Programs\textbackslash{}MiKTeX\textbackslash{}tex/latex/collectbox\textbackslash{}coll
+ectbox.sty")
+("C:\textbackslash{}Users\textbackslash{}JoÃ£o Victor\textbackslash{}AppData\textbackslash{}Local\textbackslash{}Programs\textbackslash{}MiKTeX\textbackslash{}tex/latex/adjustbox\textbackslash{}tc-pd
+ftex.def"))
+("C:\textbackslash{}Users\textbackslash{}JoÃ£o Victor\textbackslash{}AppData\textbackslash{}Local\textbackslash{}Programs\textbackslash{}MiKTeX\textbackslash{}tex/latex/ifoddpage\textbackslash{}ifodd
+page.sty")
+("C:\textbackslash{}Users\textbackslash{}JoÃ£o Victor\textbackslash{}AppData\textbackslash{}Local\textbackslash{}Programs\textbackslash{}MiKTeX\textbackslash{}tex/latex/varwidth\textbackslash{}varwid
+th.sty"))
+("C:\textbackslash{}Users\textbackslash{}JoÃ£o Victor\textbackslash{}AppData\textbackslash{}Local\textbackslash{}Programs\textbackslash{}MiKTeX\textbackslash{}tex/latex/hyperref\textbackslash{}hyperr
+ef.sty"
+("C:\textbackslash{}Users\textbackslash{}JoÃ£o Victor\textbackslash{}AppData\textbackslash{}Local\textbackslash{}Programs\textbackslash{}MiKTeX\textbackslash{}tex/generic/pdftexcmds\textbackslash{}pd
+ftexcmds.sty")
+("C:\textbackslash{}Users\textbackslash{}JoÃ£o Victor\textbackslash{}AppData\textbackslash{}Local\textbackslash{}Programs\textbackslash{}MiKTeX\textbackslash{}tex/generic/kvdefinekeys\textbackslash{}
+kvdefinekeys.sty")
+("C:\textbackslash{}Users\textbackslash{}JoÃ£o Victor\textbackslash{}AppData\textbackslash{}Local\textbackslash{}Programs\textbackslash{}MiKTeX\textbackslash{}tex/generic/pdfescape\textbackslash{}pdf
+escape.sty")
+("C:\textbackslash{}Users\textbackslash{}JoÃ£o Victor\textbackslash{}AppData\textbackslash{}Local\textbackslash{}Programs\textbackslash{}MiKTeX\textbackslash{}tex/latex/hycolor\textbackslash{}hycolor
+.sty")
+("C:\textbackslash{}Users\textbackslash{}JoÃ£o Victor\textbackslash{}AppData\textbackslash{}Local\textbackslash{}Programs\textbackslash{}MiKTeX\textbackslash{}tex/latex/letltxmacro\textbackslash{}let
+ltxmacro.sty")
+("C:\textbackslash{}Users\textbackslash{}JoÃ£o Victor\textbackslash{}AppData\textbackslash{}Local\textbackslash{}Programs\textbackslash{}MiKTeX\textbackslash{}tex/latex/auxhook\textbackslash{}auxhook
+.sty")
+("C:\textbackslash{}Users\textbackslash{}JoÃ£o Victor\textbackslash{}AppData\textbackslash{}Local\textbackslash{}Programs\textbackslash{}MiKTeX\textbackslash{}tex/latex/hyperref\textbackslash{}pd1enc
+.def")
+("C:\textbackslash{}Users\textbackslash{}JoÃ£o Victor\textbackslash{}AppData\textbackslash{}Local\textbackslash{}Programs\textbackslash{}MiKTeX\textbackslash{}tex/generic/intcalc\textbackslash{}intca
+lc.sty")
+("C:\textbackslash{}Users\textbackslash{}JoÃ£o Victor\textbackslash{}AppData\textbackslash{}Local\textbackslash{}Programs\textbackslash{}MiKTeX\textbackslash{}tex/generic/etexcmds\textbackslash{}etex
+cmds.sty")
+("C:\textbackslash{}Users\textbackslash{}JoÃ£o Victor\textbackslash{}AppData\textbackslash{}Local\textbackslash{}Programs\textbackslash{}MiKTeX\textbackslash{}tex/latex/url\textbackslash{}url.sty")
+("C:\textbackslash{}Users\textbackslash{}JoÃ£o Victor\textbackslash{}AppData\textbackslash{}Local\textbackslash{}Programs\textbackslash{}MiKTeX\textbackslash{}tex/generic/bitset\textbackslash{}bitset
+.sty"
+("C:\textbackslash{}Users\textbackslash{}JoÃ£o Victor\textbackslash{}AppData\textbackslash{}Local\textbackslash{}Programs\textbackslash{}MiKTeX\textbackslash{}tex/generic/bigintcalc\textbackslash{}bi
+gintcalc.sty"))
+("C:\textbackslash{}Users\textbackslash{}JoÃ£o Victor\textbackslash{}AppData\textbackslash{}Local\textbackslash{}Programs\textbackslash{}MiKTeX\textbackslash{}tex/latex/base\textbackslash{}atbegshi-l
+tx.sty"))
+("C:\textbackslash{}Users\textbackslash{}JoÃ£o Victor\textbackslash{}AppData\textbackslash{}Local\textbackslash{}Programs\textbackslash{}MiKTeX\textbackslash{}tex/latex/hyperref\textbackslash{}hpdfte
+x.def"
+("C:\textbackslash{}Users\textbackslash{}JoÃ£o Victor\textbackslash{}AppData\textbackslash{}Local\textbackslash{}Programs\textbackslash{}MiKTeX\textbackslash{}tex/latex/base\textbackslash{}atveryend-
+ltx.sty")
+("C:\textbackslash{}Users\textbackslash{}JoÃ£o Victor\textbackslash{}AppData\textbackslash{}Local\textbackslash{}Programs\textbackslash{}MiKTeX\textbackslash{}tex/latex/rerunfilecheck\textbackslash{}
+rerunfilecheck.sty"
+("C:\textbackslash{}Users\textbackslash{}JoÃ£o Victor\textbackslash{}AppData\textbackslash{}Local\textbackslash{}Programs\textbackslash{}MiKTeX\textbackslash{}tex/generic/uniquecounter
+\textbackslash{}uniquecounter.sty")))
+("C:\textbackslash{}Users\textbackslash{}JoÃ£o Victor\textbackslash{}AppData\textbackslash{}Local\textbackslash{}Programs\textbackslash{}MiKTeX\textbackslash{}tex/latex/titling\textbackslash{}titling
+.sty")
+("C:\textbackslash{}Users\textbackslash{}JoÃ£o Victor\textbackslash{}AppData\textbackslash{}Local\textbackslash{}Programs\textbackslash{}MiKTeX\textbackslash{}tex/latex/tools\textbackslash{}longtable
+.sty")
+("C:\textbackslash{}Users\textbackslash{}JoÃ£o Victor\textbackslash{}AppData\textbackslash{}Local\textbackslash{}Programs\textbackslash{}MiKTeX\textbackslash{}tex/latex/booktabs\textbackslash{}bookta
+bs.sty")
+("C:\textbackslash{}Users\textbackslash{}JoÃ£o Victor\textbackslash{}AppData\textbackslash{}Local\textbackslash{}Programs\textbackslash{}MiKTeX\textbackslash{}tex/latex/enumitem\textbackslash{}enumit
+em.sty")
+("C:\textbackslash{}Users\textbackslash{}JoÃ£o Victor\textbackslash{}AppData\textbackslash{}Local\textbackslash{}Programs\textbackslash{}MiKTeX\textbackslash{}tex/latex/ulem\textbackslash{}ulem.sty")
+
+("C:\textbackslash{}Users\textbackslash{}JoÃ£o Victor\textbackslash{}AppData\textbackslash{}Local\textbackslash{}Programs\textbackslash{}MiKTeX\textbackslash{}tex/latex/jknappen\textbackslash{}mathrs
+fs.sty")
+("C:\textbackslash{}Users\textbackslash{}JoÃ£o Victor\textbackslash{}AppData\textbackslash{}Local\textbackslash{}Programs\textbackslash{}MiKTeX\textbackslash{}tex/latex/psnfss\textbackslash{}t1ppl.fd
+")
+("C:\textbackslash{}Users\textbackslash{}JoÃ£o Victor\textbackslash{}AppData\textbackslash{}Local\textbackslash{}Programs\textbackslash{}MiKTeX\textbackslash{}tex/latex/l3backend\textbackslash{}l3bac
+kend-pdftex.def") (Projeto.aux
+
+LaTeX Warning: Label `metodologia' multiply defined.
+
+)
+("C:\textbackslash{}Users\textbackslash{}JoÃ£o Victor\textbackslash{}AppData\textbackslash{}Local\textbackslash{}Programs\textbackslash{}MiKTeX\textbackslash{}tex/context/base/mkii\textbackslash{}sup
+p-pdf.mkii"
+[Loading MPS to PDF converter (version 2006.09.02).]
+)
+("C:\textbackslash{}Users\textbackslash{}JoÃ£o Victor\textbackslash{}AppData\textbackslash{}Local\textbackslash{}Programs\textbackslash{}MiKTeX\textbackslash{}tex/latex/epstopdf-pkg\textbackslash{}ep
+stopdf-base.sty")
+("C:\textbackslash{}Users\textbackslash{}JoÃ£o Victor\textbackslash{}AppData\textbackslash{}Local\textbackslash{}Programs\textbackslash{}MiKTeX\textbackslash{}tex/latex/caption\textbackslash{}ltcapti
+on.sty")
+*geometry* driver: auto-detecting
+*geometry* detected driver: pdftex
+*geometry* verbose mode - [ preamble ] result:
+* driver: pdftex
+* paper: <default>
+* layout: <same size as paper>
+* layoutoffset:(h,v)=(0.0pt,0.0pt)
+* modes:
+* h-part:(L,W,R)=(72.26999pt, 469.75502pt, 72.26999pt)
+* v-part:(T,H,B)=(72.26999pt, 650.43001pt, 72.26999pt)
+* \textbackslash{}paperwidth=614.295pt
+* \textbackslash{}paperheight=794.96999pt
+* \textbackslash{}textwidth=469.75502pt
+* \textbackslash{}textheight=650.43001pt
+* \textbackslash{}oddsidemargin=0.0pt
+* \textbackslash{}evensidemargin=0.0pt
+* \textbackslash{}topmargin=-37.0pt
+* \textbackslash{}headheight=12.0pt
+* \textbackslash{}headsep=25.0pt
+* \textbackslash{}topskip=11.0pt
+* \textbackslash{}footskip=30.0pt
+* \textbackslash{}marginparwidth=59.0pt
+* \textbackslash{}marginparsep=10.0pt
+* \textbackslash{}columnsep=10.0pt
+* \textbackslash{}skip\textbackslash{}footins=10.0pt plus 4.0pt minus 2.0pt
+* \textbackslash{}hoffset=0.0pt
+* \textbackslash{}voffset=0.0pt
+* \textbackslash{}mag=1000
+* \textbackslash{}@twocolumnfalse
+* \textbackslash{}@twosidefalse
+* \textbackslash{}@mparswitchfalse
+* \textbackslash{}@reversemarginfalse
+* (1in=72.27pt=25.4mm, 1cm=28.453pt)
+
+("C:\textbackslash{}Users\textbackslash{}JoÃ£o Victor\textbackslash{}AppData\textbackslash{}Local\textbackslash{}Programs\textbackslash{}MiKTeX\textbackslash{}tex/latex/ucs\textbackslash{}ucsencs.def
+")
+("C:\textbackslash{}Users\textbackslash{}JoÃ£o Victor\textbackslash{}AppData\textbackslash{}Local\textbackslash{}Programs\textbackslash{}MiKTeX\textbackslash{}tex/latex/hyperref\textbackslash{}namere
+f.sty"
+("C:\textbackslash{}Users\textbackslash{}JoÃ£o Victor\textbackslash{}AppData\textbackslash{}Local\textbackslash{}Programs\textbackslash{}MiKTeX\textbackslash{}tex/latex/refcount\textbackslash{}refcou
+nt.sty")
+("C:\textbackslash{}Users\textbackslash{}JoÃ£o Victor\textbackslash{}AppData\textbackslash{}Local\textbackslash{}Programs\textbackslash{}MiKTeX\textbackslash{}tex/generic/gettitlestrin
+g\textbackslash{}gettitlestring.sty")) (Projeto.out) (Projeto.out)
+("C:\textbackslash{}Users\textbackslash{}JoÃ£o Victor\textbackslash{}AppData\textbackslash{}Local\textbackslash{}Programs\textbackslash{}MiKTeX\textbackslash{}tex/latex/psnfss\textbackslash{}ot1ppl.f
+d")
+("C:\textbackslash{}Users\textbackslash{}JoÃ£o Victor\textbackslash{}AppData\textbackslash{}Local\textbackslash{}Programs\textbackslash{}MiKTeX\textbackslash{}tex/latex/psnfss\textbackslash{}omlzplm.
+fd")
+("C:\textbackslash{}Users\textbackslash{}JoÃ£o Victor\textbackslash{}AppData\textbackslash{}Local\textbackslash{}Programs\textbackslash{}MiKTeX\textbackslash{}tex/latex/psnfss\textbackslash{}omszplm.
+fd")
+("C:\textbackslash{}Users\textbackslash{}JoÃ£o Victor\textbackslash{}AppData\textbackslash{}Local\textbackslash{}Programs\textbackslash{}MiKTeX\textbackslash{}tex/latex/psnfss\textbackslash{}omxzplm.
+fd")
+("C:\textbackslash{}Users\textbackslash{}JoÃ£o Victor\textbackslash{}AppData\textbackslash{}Local\textbackslash{}Programs\textbackslash{}MiKTeX\textbackslash{}tex/latex/psnfss\textbackslash{}ot1zplm.
+fd")
+("C:\textbackslash{}Users\textbackslash{}JoÃ£o Victor\textbackslash{}AppData\textbackslash{}Local\textbackslash{}Programs\textbackslash{}MiKTeX\textbackslash{}tex/latex/jknappen\textbackslash{}ursfs.
+fd")
+
+LaTeX Warning: No \textbackslash{}author given.
+
+
+LaTeX Warning: Hyper reference `1' on page 1 undefined on input line 392.
+
+
+LaTeX Warning: Hyper reference `2' on page 1 undefined on input line 392.
+
+
+LaTeX Warning: Hyper reference `wavelet' on page 1 undefined on input line 421.
+
+
+("C:\textbackslash{}Users\textbackslash{}JoÃ£o Victor\textbackslash{}AppData\textbackslash{}Local\textbackslash{}Programs\textbackslash{}MiKTeX\textbackslash{}tex/latex/base\textbackslash{}t1cmtt.fd"
+) [1\{C:/Users/JoÃ£o Victor/AppData/Local/MiKTeX/pdftex/config/pdftex.map\}]pdfTe
+X warning (ext4): destination with the same identifier (name\{metodologia\}) has
+been already used, duplicate ignored
+<to be read again>
+                   \textbackslash{}relax
+l.448 \textbackslash{}section\{Metodologia\}\textbackslash{}label\{metodologia\}\}
+
+("C:\textbackslash{}Users\textbackslash{}JoÃ£o Victor\textbackslash{}AppData\textbackslash{}Local\textbackslash{}Programs\textbackslash{}MiKTeX\textbackslash{}tex/latex/base\textbackslash{}ts1cmtt.fd
+") [2] [3]
+
+LaTeX Warning: Citation `castro\_semg\_2014' on page 4 undefined on input line 62
+5.
+
+
+("C:\textbackslash{}Users\textbackslash{}JoÃ£o Victor\textbackslash{}AppData\textbackslash{}Local\textbackslash{}Programs\textbackslash{}MiKTeX\textbackslash{}tex/latex/psnfss\textbackslash{}ts1ppl.f
+d") [4] (Projeto.aux)
+
+LaTeX Warning: There were undefined references.
+
+
+LaTeX Warning: There were multiply-defined labels.
+
+ )
+(see the transcript file for additional information) <C:\textbackslash{}Users\textbackslash{}JoÃ£o Victor\textbackslash{}App
+Data\textbackslash{}Local\textbackslash{}MiKTeX\textbackslash{}fonts/pk/ljfour/jknappen/ec/dpi600\textbackslash{}ecit1095.pk> <C:\textbackslash{}Users\textbackslash{}JoÃ
+£o Victor\textbackslash{}AppData\textbackslash{}Local\textbackslash{}MiKTeX\textbackslash{}fonts/pk/ljfour/jknappen/ec/dpi600\textbackslash{}tctt1095.pk>
+<C:\textbackslash{}Users\textbackslash{}JoÃ£o Victor\textbackslash{}AppData\textbackslash{}Local\textbackslash{}MiKTeX\textbackslash{}fonts/pk/ljfour/jknappen/ec/dpi600\textbackslash{}
+ectt1095.pk>\{C:/Users/JoÃ£o Victor/AppData/Local/Programs/MiKTeX/fonts/enc/dvip
+s/base/8r.enc\}<C:/Users/JoÃ£o Victor/AppData/Local/Programs/MiKTeX/fonts/type1/
+public/amsfonts/cm/cmmi10.pfb><C:/Users/JoÃ£o Victor/AppData/Local/Programs/MiK
+TeX/fonts/type1/public/amsfonts/cm/cmsy10.pfb><C:/Users/JoÃ£o Victor/AppData/Lo
+cal/Programs/MiKTeX/fonts/type1/urw/palatino/uplb8a.pfb><C:/Users/JoÃ£o Victor/
+AppData/Local/Programs/MiKTeX/fonts/type1/urw/palatino/uplr8a.pfb>
+Output written on Projeto.pdf (4 pages, 98650 bytes).
+Transcript written on Projeto.log.
+
+C:\textbackslash{}Dev\textbackslash{}FEI\textbackslash{}Mestrado\textbackslash{}3\_Periodo\textbackslash{}PEL301\_Biopotenciais\textbackslash{}Projeto>bibtex Projeto
+This is BibTeX, Version 0.99d (MiKTeX 20.11)
+The top-level auxiliary file: Projeto.aux
+I found no \textbackslash{}bibdata command---while reading file Projeto.aux
+I found no \textbackslash{}bibstyle command---while reading file Projeto.aux
+(There were 2 error messages)
+
+C:\textbackslash{}Dev\textbackslash{}FEI\textbackslash{}Mestrado\textbackslash{}3\_Periodo\textbackslash{}PEL301\_Biopotenciais\textbackslash{}Projeto>pdflatex Projeto.tex
+This is pdfTeX, Version 3.14159265-2.6-1.40.21 (MiKTeX 20.11)
+entering extended mode
+(Projeto.tex
+LaTeX2e <2020-10-01> patch level 2
+L3 programming layer <2020-12-07> xparse <2020-03-03>
+("C:\textbackslash{}Users\textbackslash{}JoÃ£o Victor\textbackslash{}AppData\textbackslash{}Local\textbackslash{}Programs\textbackslash{}MiKTeX\textbackslash{}tex/latex/base\textbackslash{}article.cl
+s"
+Document Class: article 2020/04/10 v1.4m Standard LaTeX document class
+("C:\textbackslash{}Users\textbackslash{}JoÃ£o Victor\textbackslash{}AppData\textbackslash{}Local\textbackslash{}Programs\textbackslash{}MiKTeX\textbackslash{}tex/latex/base\textbackslash{}size11.clo
+"))
+("C:\textbackslash{}Users\textbackslash{}JoÃ£o Victor\textbackslash{}AppData\textbackslash{}Local\textbackslash{}Programs\textbackslash{}MiKTeX\textbackslash{}tex/latex/tcolorbox\textbackslash{}tcolo
+rbox.sty"
+("C:\textbackslash{}Users\textbackslash{}JoÃ£o Victor\textbackslash{}AppData\textbackslash{}Local\textbackslash{}Programs\textbackslash{}MiKTeX\textbackslash{}tex/latex/pgf/basiclayer\textbackslash{}
+pgf.sty"
+("C:\textbackslash{}Users\textbackslash{}JoÃ£o Victor\textbackslash{}AppData\textbackslash{}Local\textbackslash{}Programs\textbackslash{}MiKTeX\textbackslash{}tex/latex/pgf/utilities\textbackslash{}p
+gfrcs.sty"
+("C:\textbackslash{}Users\textbackslash{}JoÃ£o Victor\textbackslash{}AppData\textbackslash{}Local\textbackslash{}Programs\textbackslash{}MiKTeX\textbackslash{}tex/generic/pgf/utilities
+\textbackslash{}pgfutil-common.tex"
+("C:\textbackslash{}Users\textbackslash{}JoÃ£o Victor\textbackslash{}AppData\textbackslash{}Local\textbackslash{}Programs\textbackslash{}MiKTeX\textbackslash{}tex/generic/pgf/utilities
+\textbackslash{}pgfutil-common-lists.tex"))
+("C:\textbackslash{}Users\textbackslash{}JoÃ£o Victor\textbackslash{}AppData\textbackslash{}Local\textbackslash{}Programs\textbackslash{}MiKTeX\textbackslash{}tex/generic/pgf/utilities
+\textbackslash{}pgfutil-latex.def")
+("C:\textbackslash{}Users\textbackslash{}JoÃ£o Victor\textbackslash{}AppData\textbackslash{}Local\textbackslash{}Programs\textbackslash{}MiKTeX\textbackslash{}tex/generic/pgf/utilities
+\textbackslash{}pgfrcs.code.tex"
+("C:\textbackslash{}Users\textbackslash{}JoÃ£o Victor\textbackslash{}AppData\textbackslash{}Local\textbackslash{}Programs\textbackslash{}MiKTeX\textbackslash{}tex/generic/pgf\textbackslash{}pgf.revis
+ion.tex")))
+("C:\textbackslash{}Users\textbackslash{}JoÃ£o Victor\textbackslash{}AppData\textbackslash{}Local\textbackslash{}Programs\textbackslash{}MiKTeX\textbackslash{}tex/latex/pgf/basiclayer\textbackslash{}
+pgfcore.sty"
+("C:\textbackslash{}Users\textbackslash{}JoÃ£o Victor\textbackslash{}AppData\textbackslash{}Local\textbackslash{}Programs\textbackslash{}MiKTeX\textbackslash{}tex/latex/graphics\textbackslash{}graphi
+cx.sty"
+("C:\textbackslash{}Users\textbackslash{}JoÃ£o Victor\textbackslash{}AppData\textbackslash{}Local\textbackslash{}Programs\textbackslash{}MiKTeX\textbackslash{}tex/latex/graphics\textbackslash{}keyval
+.sty")
+("C:\textbackslash{}Users\textbackslash{}JoÃ£o Victor\textbackslash{}AppData\textbackslash{}Local\textbackslash{}Programs\textbackslash{}MiKTeX\textbackslash{}tex/latex/graphics\textbackslash{}graphi
+cs.sty"
+("C:\textbackslash{}Users\textbackslash{}JoÃ£o Victor\textbackslash{}AppData\textbackslash{}Local\textbackslash{}Programs\textbackslash{}MiKTeX\textbackslash{}tex/latex/graphics\textbackslash{}trig.s
+ty")
+("C:\textbackslash{}Users\textbackslash{}JoÃ£o Victor\textbackslash{}AppData\textbackslash{}Local\textbackslash{}Programs\textbackslash{}MiKTeX\textbackslash{}tex/latex/graphics-cfg\textbackslash{}gr
+aphics.cfg")
+("C:\textbackslash{}Users\textbackslash{}JoÃ£o Victor\textbackslash{}AppData\textbackslash{}Local\textbackslash{}Programs\textbackslash{}MiKTeX\textbackslash{}tex/latex/graphics-def\textbackslash{}pd
+ftex.def")))
+("C:\textbackslash{}Users\textbackslash{}JoÃ£o Victor\textbackslash{}AppData\textbackslash{}Local\textbackslash{}Programs\textbackslash{}MiKTeX\textbackslash{}tex/latex/pgf/systemlayer
+\textbackslash{}pgfsys.sty"
+("C:\textbackslash{}Users\textbackslash{}JoÃ£o Victor\textbackslash{}AppData\textbackslash{}Local\textbackslash{}Programs\textbackslash{}MiKTeX\textbackslash{}tex/generic/pgf/systemlay
+er\textbackslash{}pgfsys.code.tex"
+("C:\textbackslash{}Users\textbackslash{}JoÃ£o Victor\textbackslash{}AppData\textbackslash{}Local\textbackslash{}Programs\textbackslash{}MiKTeX\textbackslash{}tex/generic/pgf/utilities
+\textbackslash{}pgfkeys.code.tex"
+("C:\textbackslash{}Users\textbackslash{}JoÃ£o Victor\textbackslash{}AppData\textbackslash{}Local\textbackslash{}Programs\textbackslash{}MiKTeX\textbackslash{}tex/generic/pgf/utilities
+\textbackslash{}pgfkeysfiltered.code.tex"))
+("C:\textbackslash{}Users\textbackslash{}JoÃ£o Victor\textbackslash{}AppData\textbackslash{}Local\textbackslash{}Programs\textbackslash{}MiKTeX\textbackslash{}tex/generic/pgf/systemlay
+er\textbackslash{}pgf.cfg")
+("C:\textbackslash{}Users\textbackslash{}JoÃ£o Victor\textbackslash{}AppData\textbackslash{}Local\textbackslash{}Programs\textbackslash{}MiKTeX\textbackslash{}tex/generic/pgf/systemlay
+er\textbackslash{}pgfsys-pdftex.def"
+("C:\textbackslash{}Users\textbackslash{}JoÃ£o Victor\textbackslash{}AppData\textbackslash{}Local\textbackslash{}Programs\textbackslash{}MiKTeX\textbackslash{}tex/generic/pgf/systemlay
+er\textbackslash{}pgfsys-common-pdf.def")))
+("C:\textbackslash{}Users\textbackslash{}JoÃ£o Victor\textbackslash{}AppData\textbackslash{}Local\textbackslash{}Programs\textbackslash{}MiKTeX\textbackslash{}tex/generic/pgf/systemlay
+er\textbackslash{}pgfsyssoftpath.code.tex")
+("C:\textbackslash{}Users\textbackslash{}JoÃ£o Victor\textbackslash{}AppData\textbackslash{}Local\textbackslash{}Programs\textbackslash{}MiKTeX\textbackslash{}tex/generic/pgf/systemlay
+er\textbackslash{}pgfsysprotocol.code.tex"))
+("C:\textbackslash{}Users\textbackslash{}JoÃ£o Victor\textbackslash{}AppData\textbackslash{}Local\textbackslash{}Programs\textbackslash{}MiKTeX\textbackslash{}tex/latex/xcolor\textbackslash{}xcolor.s
+ty"
+("C:\textbackslash{}Users\textbackslash{}JoÃ£o Victor\textbackslash{}AppData\textbackslash{}Local\textbackslash{}Programs\textbackslash{}MiKTeX\textbackslash{}tex/latex/graphics-cfg\textbackslash{}co
+lor.cfg"))
+("C:\textbackslash{}Users\textbackslash{}JoÃ£o Victor\textbackslash{}AppData\textbackslash{}Local\textbackslash{}Programs\textbackslash{}MiKTeX\textbackslash{}tex/generic/pgf/basiclaye
+r\textbackslash{}pgfcore.code.tex"
+("C:\textbackslash{}Users\textbackslash{}JoÃ£o Victor\textbackslash{}AppData\textbackslash{}Local\textbackslash{}Programs\textbackslash{}MiKTeX\textbackslash{}tex/generic/pgf/math\textbackslash{}pgfm
+ath.code.tex"
+("C:\textbackslash{}Users\textbackslash{}JoÃ£o Victor\textbackslash{}AppData\textbackslash{}Local\textbackslash{}Programs\textbackslash{}MiKTeX\textbackslash{}tex/generic/pgf/math\textbackslash{}pgfm
+athcalc.code.tex"
+("C:\textbackslash{}Users\textbackslash{}JoÃ£o Victor\textbackslash{}AppData\textbackslash{}Local\textbackslash{}Programs\textbackslash{}MiKTeX\textbackslash{}tex/generic/pgf/math\textbackslash{}pgfm
+athutil.code.tex")
+("C:\textbackslash{}Users\textbackslash{}JoÃ£o Victor\textbackslash{}AppData\textbackslash{}Local\textbackslash{}Programs\textbackslash{}MiKTeX\textbackslash{}tex/generic/pgf/math\textbackslash{}pgfm
+athparser.code.tex")
+("C:\textbackslash{}Users\textbackslash{}JoÃ£o Victor\textbackslash{}AppData\textbackslash{}Local\textbackslash{}Programs\textbackslash{}MiKTeX\textbackslash{}tex/generic/pgf/math\textbackslash{}pgfm
+athfunctions.code.tex"
+("C:\textbackslash{}Users\textbackslash{}JoÃ£o Victor\textbackslash{}AppData\textbackslash{}Local\textbackslash{}Programs\textbackslash{}MiKTeX\textbackslash{}tex/generic/pgf/math\textbackslash{}pgfm
+athfunctions.basic.code.tex")
+("C:\textbackslash{}Users\textbackslash{}JoÃ£o Victor\textbackslash{}AppData\textbackslash{}Local\textbackslash{}Programs\textbackslash{}MiKTeX\textbackslash{}tex/generic/pgf/math\textbackslash{}pgfm
+athfunctions.trigonometric.code.tex")
+("C:\textbackslash{}Users\textbackslash{}JoÃ£o Victor\textbackslash{}AppData\textbackslash{}Local\textbackslash{}Programs\textbackslash{}MiKTeX\textbackslash{}tex/generic/pgf/math\textbackslash{}pgfm
+athfunctions.random.code.tex")
+("C:\textbackslash{}Users\textbackslash{}JoÃ£o Victor\textbackslash{}AppData\textbackslash{}Local\textbackslash{}Programs\textbackslash{}MiKTeX\textbackslash{}tex/generic/pgf/math\textbackslash{}pgfm
+athfunctions.comparison.code.tex")
+("C:\textbackslash{}Users\textbackslash{}JoÃ£o Victor\textbackslash{}AppData\textbackslash{}Local\textbackslash{}Programs\textbackslash{}MiKTeX\textbackslash{}tex/generic/pgf/math\textbackslash{}pgfm
+athfunctions.base.code.tex")
+("C:\textbackslash{}Users\textbackslash{}JoÃ£o Victor\textbackslash{}AppData\textbackslash{}Local\textbackslash{}Programs\textbackslash{}MiKTeX\textbackslash{}tex/generic/pgf/math\textbackslash{}pgfm
+athfunctions.round.code.tex")
+("C:\textbackslash{}Users\textbackslash{}JoÃ£o Victor\textbackslash{}AppData\textbackslash{}Local\textbackslash{}Programs\textbackslash{}MiKTeX\textbackslash{}tex/generic/pgf/math\textbackslash{}pgfm
+athfunctions.misc.code.tex")
+("C:\textbackslash{}Users\textbackslash{}JoÃ£o Victor\textbackslash{}AppData\textbackslash{}Local\textbackslash{}Programs\textbackslash{}MiKTeX\textbackslash{}tex/generic/pgf/math\textbackslash{}pgfm
+athfunctions.integerarithmetics.code.tex")))
+("C:\textbackslash{}Users\textbackslash{}JoÃ£o Victor\textbackslash{}AppData\textbackslash{}Local\textbackslash{}Programs\textbackslash{}MiKTeX\textbackslash{}tex/generic/pgf/math\textbackslash{}pgfm
+athfloat.code.tex"))
+("C:\textbackslash{}Users\textbackslash{}JoÃ£o Victor\textbackslash{}AppData\textbackslash{}Local\textbackslash{}Programs\textbackslash{}MiKTeX\textbackslash{}tex/generic/pgf/math\textbackslash{}pgfi
+nt.code.tex")
+("C:\textbackslash{}Users\textbackslash{}JoÃ£o Victor\textbackslash{}AppData\textbackslash{}Local\textbackslash{}Programs\textbackslash{}MiKTeX\textbackslash{}tex/generic/pgf/basiclaye
+r\textbackslash{}pgfcorepoints.code.tex")
+("C:\textbackslash{}Users\textbackslash{}JoÃ£o Victor\textbackslash{}AppData\textbackslash{}Local\textbackslash{}Programs\textbackslash{}MiKTeX\textbackslash{}tex/generic/pgf/basiclaye
+r\textbackslash{}pgfcorepathconstruct.code.tex")
+("C:\textbackslash{}Users\textbackslash{}JoÃ£o Victor\textbackslash{}AppData\textbackslash{}Local\textbackslash{}Programs\textbackslash{}MiKTeX\textbackslash{}tex/generic/pgf/basiclaye
+r\textbackslash{}pgfcorepathusage.code.tex")
+("C:\textbackslash{}Users\textbackslash{}JoÃ£o Victor\textbackslash{}AppData\textbackslash{}Local\textbackslash{}Programs\textbackslash{}MiKTeX\textbackslash{}tex/generic/pgf/basiclaye
+r\textbackslash{}pgfcorescopes.code.tex")
+("C:\textbackslash{}Users\textbackslash{}JoÃ£o Victor\textbackslash{}AppData\textbackslash{}Local\textbackslash{}Programs\textbackslash{}MiKTeX\textbackslash{}tex/generic/pgf/basiclaye
+r\textbackslash{}pgfcoregraphicstate.code.tex")
+("C:\textbackslash{}Users\textbackslash{}JoÃ£o Victor\textbackslash{}AppData\textbackslash{}Local\textbackslash{}Programs\textbackslash{}MiKTeX\textbackslash{}tex/generic/pgf/basiclaye
+r\textbackslash{}pgfcoretransformations.code.tex")
+("C:\textbackslash{}Users\textbackslash{}JoÃ£o Victor\textbackslash{}AppData\textbackslash{}Local\textbackslash{}Programs\textbackslash{}MiKTeX\textbackslash{}tex/generic/pgf/basiclaye
+r\textbackslash{}pgfcorequick.code.tex")
+("C:\textbackslash{}Users\textbackslash{}JoÃ£o Victor\textbackslash{}AppData\textbackslash{}Local\textbackslash{}Programs\textbackslash{}MiKTeX\textbackslash{}tex/generic/pgf/basiclaye
+r\textbackslash{}pgfcoreobjects.code.tex")
+("C:\textbackslash{}Users\textbackslash{}JoÃ£o Victor\textbackslash{}AppData\textbackslash{}Local\textbackslash{}Programs\textbackslash{}MiKTeX\textbackslash{}tex/generic/pgf/basiclaye
+r\textbackslash{}pgfcorepathprocessing.code.tex")
+("C:\textbackslash{}Users\textbackslash{}JoÃ£o Victor\textbackslash{}AppData\textbackslash{}Local\textbackslash{}Programs\textbackslash{}MiKTeX\textbackslash{}tex/generic/pgf/basiclaye
+r\textbackslash{}pgfcorearrows.code.tex")
+("C:\textbackslash{}Users\textbackslash{}JoÃ£o Victor\textbackslash{}AppData\textbackslash{}Local\textbackslash{}Programs\textbackslash{}MiKTeX\textbackslash{}tex/generic/pgf/basiclaye
+r\textbackslash{}pgfcoreshade.code.tex")
+("C:\textbackslash{}Users\textbackslash{}JoÃ£o Victor\textbackslash{}AppData\textbackslash{}Local\textbackslash{}Programs\textbackslash{}MiKTeX\textbackslash{}tex/generic/pgf/basiclaye
+r\textbackslash{}pgfcoreimage.code.tex"
+("C:\textbackslash{}Users\textbackslash{}JoÃ£o Victor\textbackslash{}AppData\textbackslash{}Local\textbackslash{}Programs\textbackslash{}MiKTeX\textbackslash{}tex/generic/pgf/basiclaye
+r\textbackslash{}pgfcoreexternal.code.tex"))
+("C:\textbackslash{}Users\textbackslash{}JoÃ£o Victor\textbackslash{}AppData\textbackslash{}Local\textbackslash{}Programs\textbackslash{}MiKTeX\textbackslash{}tex/generic/pgf/basiclaye
+r\textbackslash{}pgfcorelayers.code.tex")
+("C:\textbackslash{}Users\textbackslash{}JoÃ£o Victor\textbackslash{}AppData\textbackslash{}Local\textbackslash{}Programs\textbackslash{}MiKTeX\textbackslash{}tex/generic/pgf/basiclaye
+r\textbackslash{}pgfcoretransparency.code.tex")
+("C:\textbackslash{}Users\textbackslash{}JoÃ£o Victor\textbackslash{}AppData\textbackslash{}Local\textbackslash{}Programs\textbackslash{}MiKTeX\textbackslash{}tex/generic/pgf/basiclaye
+r\textbackslash{}pgfcorepatterns.code.tex")
+("C:\textbackslash{}Users\textbackslash{}JoÃ£o Victor\textbackslash{}AppData\textbackslash{}Local\textbackslash{}Programs\textbackslash{}MiKTeX\textbackslash{}tex/generic/pgf/basiclaye
+r\textbackslash{}pgfcorerdf.code.tex")))
+("C:\textbackslash{}Users\textbackslash{}JoÃ£o Victor\textbackslash{}AppData\textbackslash{}Local\textbackslash{}Programs\textbackslash{}MiKTeX\textbackslash{}tex/generic/pgf/modules\textbackslash{}p
+gfmoduleshapes.code.tex")
+("C:\textbackslash{}Users\textbackslash{}JoÃ£o Victor\textbackslash{}AppData\textbackslash{}Local\textbackslash{}Programs\textbackslash{}MiKTeX\textbackslash{}tex/generic/pgf/modules\textbackslash{}p
+gfmoduleplot.code.tex")
+("C:\textbackslash{}Users\textbackslash{}JoÃ£o Victor\textbackslash{}AppData\textbackslash{}Local\textbackslash{}Programs\textbackslash{}MiKTeX\textbackslash{}tex/latex/pgf/compatibili
+ty\textbackslash{}pgfcomp-version-0-65.sty")
+("C:\textbackslash{}Users\textbackslash{}JoÃ£o Victor\textbackslash{}AppData\textbackslash{}Local\textbackslash{}Programs\textbackslash{}MiKTeX\textbackslash{}tex/latex/pgf/compatibili
+ty\textbackslash{}pgfcomp-version-1-18.sty"))
+("C:\textbackslash{}Users\textbackslash{}JoÃ£o Victor\textbackslash{}AppData\textbackslash{}Local\textbackslash{}Programs\textbackslash{}MiKTeX\textbackslash{}tex/latex/tools\textbackslash{}verbatim.
+sty")
+("C:\textbackslash{}Users\textbackslash{}JoÃ£o Victor\textbackslash{}AppData\textbackslash{}Local\textbackslash{}Programs\textbackslash{}MiKTeX\textbackslash{}tex/latex/environ\textbackslash{}environ
+.sty"
+("C:\textbackslash{}Users\textbackslash{}JoÃ£o Victor\textbackslash{}AppData\textbackslash{}Local\textbackslash{}Programs\textbackslash{}MiKTeX\textbackslash{}tex/latex/trimspaces\textbackslash{}trim
+spaces.sty"))
+("C:\textbackslash{}Users\textbackslash{}JoÃ£o Victor\textbackslash{}AppData\textbackslash{}Local\textbackslash{}Programs\textbackslash{}MiKTeX\textbackslash{}tex/latex/etoolbox\textbackslash{}etoolb
+ox.sty")
+("C:\textbackslash{}Users\textbackslash{}JoÃ£o Victor\textbackslash{}AppData\textbackslash{}Local\textbackslash{}Programs\textbackslash{}MiKTeX\textbackslash{}tex/latex/tcolorbox\textbackslash{}tcbbr
+eakable.code.tex"
+Library (tcolorbox): 'tcbbreakable.code.tex' version '4.42'
+
+("C:\textbackslash{}Users\textbackslash{}JoÃ£o Victor\textbackslash{}AppData\textbackslash{}Local\textbackslash{}Programs\textbackslash{}MiKTeX\textbackslash{}tex/generic/oberdiek\textbackslash{}pdfc
+ol.sty"
+("C:\textbackslash{}Users\textbackslash{}JoÃ£o Victor\textbackslash{}AppData\textbackslash{}Local\textbackslash{}Programs\textbackslash{}MiKTeX\textbackslash{}tex/generic/ltxcmds\textbackslash{}ltxcm
+ds.sty")
+("C:\textbackslash{}Users\textbackslash{}JoÃ£o Victor\textbackslash{}AppData\textbackslash{}Local\textbackslash{}Programs\textbackslash{}MiKTeX\textbackslash{}tex/generic/infwarerr\textbackslash{}inf
+warerr.sty")
+("C:\textbackslash{}Users\textbackslash{}JoÃ£o Victor\textbackslash{}AppData\textbackslash{}Local\textbackslash{}Programs\textbackslash{}MiKTeX\textbackslash{}tex/generic/iftex\textbackslash{}iftex.s
+ty"))))
+("C:\textbackslash{}Users\textbackslash{}JoÃ£o Victor\textbackslash{}AppData\textbackslash{}Local\textbackslash{}Programs\textbackslash{}MiKTeX\textbackslash{}tex/latex/parskip\textbackslash{}parskip
+.sty"
+("C:\textbackslash{}Users\textbackslash{}JoÃ£o Victor\textbackslash{}AppData\textbackslash{}Local\textbackslash{}Programs\textbackslash{}MiKTeX\textbackslash{}tex/latex/kvoptions\textbackslash{}kvopt
+ions.sty"
+("C:\textbackslash{}Users\textbackslash{}JoÃ£o Victor\textbackslash{}AppData\textbackslash{}Local\textbackslash{}Programs\textbackslash{}MiKTeX\textbackslash{}tex/generic/kvsetkeys\textbackslash{}kvs
+etkeys.sty")))
+("C:\textbackslash{}Users\textbackslash{}JoÃ£o Victor\textbackslash{}AppData\textbackslash{}Local\textbackslash{}Programs\textbackslash{}MiKTeX\textbackslash{}tex/latex/base\textbackslash{}fontenc.st
+y")
+("C:\textbackslash{}Users\textbackslash{}JoÃ£o Victor\textbackslash{}AppData\textbackslash{}Local\textbackslash{}Programs\textbackslash{}MiKTeX\textbackslash{}tex/latex/psnfss\textbackslash{}mathpazo
+.sty")
+("C:\textbackslash{}Users\textbackslash{}JoÃ£o Victor\textbackslash{}AppData\textbackslash{}Local\textbackslash{}Programs\textbackslash{}MiKTeX\textbackslash{}tex/latex/caption\textbackslash{}caption
+.sty"
+("C:\textbackslash{}Users\textbackslash{}JoÃ£o Victor\textbackslash{}AppData\textbackslash{}Local\textbackslash{}Programs\textbackslash{}MiKTeX\textbackslash{}tex/latex/caption\textbackslash{}caption
+3.sty"))
+("C:\textbackslash{}Users\textbackslash{}JoÃ£o Victor\textbackslash{}AppData\textbackslash{}Local\textbackslash{}Programs\textbackslash{}MiKTeX\textbackslash{}tex/latex/float\textbackslash{}float.sty
+")
+("C:\textbackslash{}Users\textbackslash{}JoÃ£o Victor\textbackslash{}AppData\textbackslash{}Local\textbackslash{}Programs\textbackslash{}MiKTeX\textbackslash{}tex/latex/tools\textbackslash{}enumerate
+.sty")
+("C:\textbackslash{}Users\textbackslash{}JoÃ£o Victor\textbackslash{}AppData\textbackslash{}Local\textbackslash{}Programs\textbackslash{}MiKTeX\textbackslash{}tex/latex/geometry\textbackslash{}geomet
+ry.sty"
+("C:\textbackslash{}Users\textbackslash{}JoÃ£o Victor\textbackslash{}AppData\textbackslash{}Local\textbackslash{}Programs\textbackslash{}MiKTeX\textbackslash{}tex/generic/iftex\textbackslash{}ifvtex.
+sty")
+("C:\textbackslash{}Users\textbackslash{}JoÃ£o Victor\textbackslash{}AppData\textbackslash{}Local\textbackslash{}Programs\textbackslash{}MiKTeX\textbackslash{}tex/latex/geometry\textbackslash{}geomet
+ry.cfg"))
+("C:\textbackslash{}Users\textbackslash{}JoÃ£o Victor\textbackslash{}AppData\textbackslash{}Local\textbackslash{}Programs\textbackslash{}MiKTeX\textbackslash{}tex/latex/amsmath\textbackslash{}amsmath
+.sty"
+For additional information on amsmath, use the `?' option.
+
+("C:\textbackslash{}Users\textbackslash{}JoÃ£o Victor\textbackslash{}AppData\textbackslash{}Local\textbackslash{}Programs\textbackslash{}MiKTeX\textbackslash{}tex/latex/amsmath\textbackslash{}amstext
+.sty"
+("C:\textbackslash{}Users\textbackslash{}JoÃ£o Victor\textbackslash{}AppData\textbackslash{}Local\textbackslash{}Programs\textbackslash{}MiKTeX\textbackslash{}tex/latex/amsmath\textbackslash{}amsgen.
+sty"))
+("C:\textbackslash{}Users\textbackslash{}JoÃ£o Victor\textbackslash{}AppData\textbackslash{}Local\textbackslash{}Programs\textbackslash{}MiKTeX\textbackslash{}tex/latex/amsmath\textbackslash{}amsbsy.
+sty")
+("C:\textbackslash{}Users\textbackslash{}JoÃ£o Victor\textbackslash{}AppData\textbackslash{}Local\textbackslash{}Programs\textbackslash{}MiKTeX\textbackslash{}tex/latex/amsmath\textbackslash{}amsopn.
+sty"))
+("C:\textbackslash{}Users\textbackslash{}JoÃ£o Victor\textbackslash{}AppData\textbackslash{}Local\textbackslash{}Programs\textbackslash{}MiKTeX\textbackslash{}tex/latex/amsfonts\textbackslash{}amssym
+b.sty"
+("C:\textbackslash{}Users\textbackslash{}JoÃ£o Victor\textbackslash{}AppData\textbackslash{}Local\textbackslash{}Programs\textbackslash{}MiKTeX\textbackslash{}tex/latex/amsfonts\textbackslash{}amsfon
+ts.sty"))
+("C:\textbackslash{}Users\textbackslash{}JoÃ£o Victor\textbackslash{}AppData\textbackslash{}Local\textbackslash{}Programs\textbackslash{}MiKTeX\textbackslash{}tex/latex/base\textbackslash{}textcomp.s
+ty")
+("C:\textbackslash{}Users\textbackslash{}JoÃ£o Victor\textbackslash{}AppData\textbackslash{}Local\textbackslash{}Programs\textbackslash{}MiKTeX\textbackslash{}tex/latex/upquote\textbackslash{}upquote
+.sty")
+("C:\textbackslash{}Users\textbackslash{}JoÃ£o Victor\textbackslash{}AppData\textbackslash{}Local\textbackslash{}Programs\textbackslash{}MiKTeX\textbackslash{}tex/latex/eurosym\textbackslash{}eurosym
+.sty")
+("C:\textbackslash{}Users\textbackslash{}JoÃ£o Victor\textbackslash{}AppData\textbackslash{}Local\textbackslash{}Programs\textbackslash{}MiKTeX\textbackslash{}tex/latex/ucs\textbackslash{}ucs.sty"
+("C:\textbackslash{}Users\textbackslash{}JoÃ£o Victor\textbackslash{}AppData\textbackslash{}Local\textbackslash{}Programs\textbackslash{}MiKTeX\textbackslash{}tex/latex/ucs\textbackslash{}uni-global.
+def"))
+("C:\textbackslash{}Users\textbackslash{}JoÃ£o Victor\textbackslash{}AppData\textbackslash{}Local\textbackslash{}Programs\textbackslash{}MiKTeX\textbackslash{}tex/latex/fancyvrb\textbackslash{}fancyv
+rb.sty")
+("C:\textbackslash{}Users\textbackslash{}JoÃ£o Victor\textbackslash{}AppData\textbackslash{}Local\textbackslash{}Programs\textbackslash{}MiKTeX\textbackslash{}tex/latex/grffile\textbackslash{}grffile
+.sty")
+("C:\textbackslash{}Users\textbackslash{}JoÃ£o Victor\textbackslash{}AppData\textbackslash{}Local\textbackslash{}Programs\textbackslash{}MiKTeX\textbackslash{}tex/latex/adjustbox\textbackslash{}adjus
+tbox.sty"
+("C:\textbackslash{}Users\textbackslash{}JoÃ£o Victor\textbackslash{}AppData\textbackslash{}Local\textbackslash{}Programs\textbackslash{}MiKTeX\textbackslash{}tex/latex/xkeyval\textbackslash{}xkeyval
+.sty"
+("C:\textbackslash{}Users\textbackslash{}JoÃ£o Victor\textbackslash{}AppData\textbackslash{}Local\textbackslash{}Programs\textbackslash{}MiKTeX\textbackslash{}tex/generic/xkeyval\textbackslash{}xkeyv
+al.tex"
+("C:\textbackslash{}Users\textbackslash{}JoÃ£o Victor\textbackslash{}AppData\textbackslash{}Local\textbackslash{}Programs\textbackslash{}MiKTeX\textbackslash{}tex/generic/xkeyval\textbackslash{}xkvut
+ils.tex")))
+("C:\textbackslash{}Users\textbackslash{}JoÃ£o Victor\textbackslash{}AppData\textbackslash{}Local\textbackslash{}Programs\textbackslash{}MiKTeX\textbackslash{}tex/latex/adjustbox\textbackslash{}adjca
+lc.sty")
+("C:\textbackslash{}Users\textbackslash{}JoÃ£o Victor\textbackslash{}AppData\textbackslash{}Local\textbackslash{}Programs\textbackslash{}MiKTeX\textbackslash{}tex/latex/adjustbox\textbackslash{}trimc
+lip.sty"
+("C:\textbackslash{}Users\textbackslash{}JoÃ£o Victor\textbackslash{}AppData\textbackslash{}Local\textbackslash{}Programs\textbackslash{}MiKTeX\textbackslash{}tex/latex/collectbox\textbackslash{}coll
+ectbox.sty")
+("C:\textbackslash{}Users\textbackslash{}JoÃ£o Victor\textbackslash{}AppData\textbackslash{}Local\textbackslash{}Programs\textbackslash{}MiKTeX\textbackslash{}tex/latex/adjustbox\textbackslash{}tc-pd
+ftex.def"))
+("C:\textbackslash{}Users\textbackslash{}JoÃ£o Victor\textbackslash{}AppData\textbackslash{}Local\textbackslash{}Programs\textbackslash{}MiKTeX\textbackslash{}tex/latex/ifoddpage\textbackslash{}ifodd
+page.sty")
+("C:\textbackslash{}Users\textbackslash{}JoÃ£o Victor\textbackslash{}AppData\textbackslash{}Local\textbackslash{}Programs\textbackslash{}MiKTeX\textbackslash{}tex/latex/varwidth\textbackslash{}varwid
+th.sty"))
+("C:\textbackslash{}Users\textbackslash{}JoÃ£o Victor\textbackslash{}AppData\textbackslash{}Local\textbackslash{}Programs\textbackslash{}MiKTeX\textbackslash{}tex/latex/hyperref\textbackslash{}hyperr
+ef.sty"
+("C:\textbackslash{}Users\textbackslash{}JoÃ£o Victor\textbackslash{}AppData\textbackslash{}Local\textbackslash{}Programs\textbackslash{}MiKTeX\textbackslash{}tex/generic/pdftexcmds\textbackslash{}pd
+ftexcmds.sty")
+("C:\textbackslash{}Users\textbackslash{}JoÃ£o Victor\textbackslash{}AppData\textbackslash{}Local\textbackslash{}Programs\textbackslash{}MiKTeX\textbackslash{}tex/generic/kvdefinekeys\textbackslash{}
+kvdefinekeys.sty")
+("C:\textbackslash{}Users\textbackslash{}JoÃ£o Victor\textbackslash{}AppData\textbackslash{}Local\textbackslash{}Programs\textbackslash{}MiKTeX\textbackslash{}tex/generic/pdfescape\textbackslash{}pdf
+escape.sty")
+("C:\textbackslash{}Users\textbackslash{}JoÃ£o Victor\textbackslash{}AppData\textbackslash{}Local\textbackslash{}Programs\textbackslash{}MiKTeX\textbackslash{}tex/latex/hycolor\textbackslash{}hycolor
+.sty")
+("C:\textbackslash{}Users\textbackslash{}JoÃ£o Victor\textbackslash{}AppData\textbackslash{}Local\textbackslash{}Programs\textbackslash{}MiKTeX\textbackslash{}tex/latex/letltxmacro\textbackslash{}let
+ltxmacro.sty")
+("C:\textbackslash{}Users\textbackslash{}JoÃ£o Victor\textbackslash{}AppData\textbackslash{}Local\textbackslash{}Programs\textbackslash{}MiKTeX\textbackslash{}tex/latex/auxhook\textbackslash{}auxhook
+.sty")
+("C:\textbackslash{}Users\textbackslash{}JoÃ£o Victor\textbackslash{}AppData\textbackslash{}Local\textbackslash{}Programs\textbackslash{}MiKTeX\textbackslash{}tex/latex/hyperref\textbackslash{}pd1enc
+.def")
+("C:\textbackslash{}Users\textbackslash{}JoÃ£o Victor\textbackslash{}AppData\textbackslash{}Local\textbackslash{}Programs\textbackslash{}MiKTeX\textbackslash{}tex/generic/intcalc\textbackslash{}intca
+lc.sty")
+("C:\textbackslash{}Users\textbackslash{}JoÃ£o Victor\textbackslash{}AppData\textbackslash{}Local\textbackslash{}Programs\textbackslash{}MiKTeX\textbackslash{}tex/generic/etexcmds\textbackslash{}etex
+cmds.sty")
+("C:\textbackslash{}Users\textbackslash{}JoÃ£o Victor\textbackslash{}AppData\textbackslash{}Local\textbackslash{}Programs\textbackslash{}MiKTeX\textbackslash{}tex/latex/url\textbackslash{}url.sty")
+("C:\textbackslash{}Users\textbackslash{}JoÃ£o Victor\textbackslash{}AppData\textbackslash{}Local\textbackslash{}Programs\textbackslash{}MiKTeX\textbackslash{}tex/generic/bitset\textbackslash{}bitset
+.sty"
+("C:\textbackslash{}Users\textbackslash{}JoÃ£o Victor\textbackslash{}AppData\textbackslash{}Local\textbackslash{}Programs\textbackslash{}MiKTeX\textbackslash{}tex/generic/bigintcalc\textbackslash{}bi
+gintcalc.sty"))
+("C:\textbackslash{}Users\textbackslash{}JoÃ£o Victor\textbackslash{}AppData\textbackslash{}Local\textbackslash{}Programs\textbackslash{}MiKTeX\textbackslash{}tex/latex/base\textbackslash{}atbegshi-l
+tx.sty"))
+("C:\textbackslash{}Users\textbackslash{}JoÃ£o Victor\textbackslash{}AppData\textbackslash{}Local\textbackslash{}Programs\textbackslash{}MiKTeX\textbackslash{}tex/latex/hyperref\textbackslash{}hpdfte
+x.def"
+("C:\textbackslash{}Users\textbackslash{}JoÃ£o Victor\textbackslash{}AppData\textbackslash{}Local\textbackslash{}Programs\textbackslash{}MiKTeX\textbackslash{}tex/latex/base\textbackslash{}atveryend-
+ltx.sty")
+("C:\textbackslash{}Users\textbackslash{}JoÃ£o Victor\textbackslash{}AppData\textbackslash{}Local\textbackslash{}Programs\textbackslash{}MiKTeX\textbackslash{}tex/latex/rerunfilecheck\textbackslash{}
+rerunfilecheck.sty"
+("C:\textbackslash{}Users\textbackslash{}JoÃ£o Victor\textbackslash{}AppData\textbackslash{}Local\textbackslash{}Programs\textbackslash{}MiKTeX\textbackslash{}tex/generic/uniquecounter
+\textbackslash{}uniquecounter.sty")))
+("C:\textbackslash{}Users\textbackslash{}JoÃ£o Victor\textbackslash{}AppData\textbackslash{}Local\textbackslash{}Programs\textbackslash{}MiKTeX\textbackslash{}tex/latex/titling\textbackslash{}titling
+.sty")
+("C:\textbackslash{}Users\textbackslash{}JoÃ£o Victor\textbackslash{}AppData\textbackslash{}Local\textbackslash{}Programs\textbackslash{}MiKTeX\textbackslash{}tex/latex/tools\textbackslash{}longtable
+.sty")
+("C:\textbackslash{}Users\textbackslash{}JoÃ£o Victor\textbackslash{}AppData\textbackslash{}Local\textbackslash{}Programs\textbackslash{}MiKTeX\textbackslash{}tex/latex/booktabs\textbackslash{}bookta
+bs.sty")
+("C:\textbackslash{}Users\textbackslash{}JoÃ£o Victor\textbackslash{}AppData\textbackslash{}Local\textbackslash{}Programs\textbackslash{}MiKTeX\textbackslash{}tex/latex/enumitem\textbackslash{}enumit
+em.sty")
+("C:\textbackslash{}Users\textbackslash{}JoÃ£o Victor\textbackslash{}AppData\textbackslash{}Local\textbackslash{}Programs\textbackslash{}MiKTeX\textbackslash{}tex/latex/ulem\textbackslash{}ulem.sty")
+
+("C:\textbackslash{}Users\textbackslash{}JoÃ£o Victor\textbackslash{}AppData\textbackslash{}Local\textbackslash{}Programs\textbackslash{}MiKTeX\textbackslash{}tex/latex/jknappen\textbackslash{}mathrs
+fs.sty")
+("C:\textbackslash{}Users\textbackslash{}JoÃ£o Victor\textbackslash{}AppData\textbackslash{}Local\textbackslash{}Programs\textbackslash{}MiKTeX\textbackslash{}tex/latex/psnfss\textbackslash{}t1ppl.fd
+")
+("C:\textbackslash{}Users\textbackslash{}JoÃ£o Victor\textbackslash{}AppData\textbackslash{}Local\textbackslash{}Programs\textbackslash{}MiKTeX\textbackslash{}tex/latex/l3backend\textbackslash{}l3bac
+kend-pdftex.def") (Projeto.aux
+
+LaTeX Warning: Label `metodologia' multiply defined.
+
+)
+("C:\textbackslash{}Users\textbackslash{}JoÃ£o Victor\textbackslash{}AppData\textbackslash{}Local\textbackslash{}Programs\textbackslash{}MiKTeX\textbackslash{}tex/context/base/mkii\textbackslash{}sup
+p-pdf.mkii"
+[Loading MPS to PDF converter (version 2006.09.02).]
+)
+("C:\textbackslash{}Users\textbackslash{}JoÃ£o Victor\textbackslash{}AppData\textbackslash{}Local\textbackslash{}Programs\textbackslash{}MiKTeX\textbackslash{}tex/latex/epstopdf-pkg\textbackslash{}ep
+stopdf-base.sty")
+("C:\textbackslash{}Users\textbackslash{}JoÃ£o Victor\textbackslash{}AppData\textbackslash{}Local\textbackslash{}Programs\textbackslash{}MiKTeX\textbackslash{}tex/latex/caption\textbackslash{}ltcapti
+on.sty")
+*geometry* driver: auto-detecting
+*geometry* detected driver: pdftex
+*geometry* verbose mode - [ preamble ] result:
+* driver: pdftex
+* paper: <default>
+* layout: <same size as paper>
+* layoutoffset:(h,v)=(0.0pt,0.0pt)
+* modes:
+* h-part:(L,W,R)=(72.26999pt, 469.75502pt, 72.26999pt)
+* v-part:(T,H,B)=(72.26999pt, 650.43001pt, 72.26999pt)
+* \textbackslash{}paperwidth=614.295pt
+* \textbackslash{}paperheight=794.96999pt
+* \textbackslash{}textwidth=469.75502pt
+* \textbackslash{}textheight=650.43001pt
+* \textbackslash{}oddsidemargin=0.0pt
+* \textbackslash{}evensidemargin=0.0pt
+* \textbackslash{}topmargin=-37.0pt
+* \textbackslash{}headheight=12.0pt
+* \textbackslash{}headsep=25.0pt
+* \textbackslash{}topskip=11.0pt
+* \textbackslash{}footskip=30.0pt
+* \textbackslash{}marginparwidth=59.0pt
+* \textbackslash{}marginparsep=10.0pt
+* \textbackslash{}columnsep=10.0pt
+* \textbackslash{}skip\textbackslash{}footins=10.0pt plus 4.0pt minus 2.0pt
+* \textbackslash{}hoffset=0.0pt
+* \textbackslash{}voffset=0.0pt
+* \textbackslash{}mag=1000
+* \textbackslash{}@twocolumnfalse
+* \textbackslash{}@twosidefalse
+* \textbackslash{}@mparswitchfalse
+* \textbackslash{}@reversemarginfalse
+* (1in=72.27pt=25.4mm, 1cm=28.453pt)
+
+("C:\textbackslash{}Users\textbackslash{}JoÃ£o Victor\textbackslash{}AppData\textbackslash{}Local\textbackslash{}Programs\textbackslash{}MiKTeX\textbackslash{}tex/latex/ucs\textbackslash{}ucsencs.def
+")
+("C:\textbackslash{}Users\textbackslash{}JoÃ£o Victor\textbackslash{}AppData\textbackslash{}Local\textbackslash{}Programs\textbackslash{}MiKTeX\textbackslash{}tex/latex/hyperref\textbackslash{}namere
+f.sty"
+("C:\textbackslash{}Users\textbackslash{}JoÃ£o Victor\textbackslash{}AppData\textbackslash{}Local\textbackslash{}Programs\textbackslash{}MiKTeX\textbackslash{}tex/latex/refcount\textbackslash{}refcou
+nt.sty")
+("C:\textbackslash{}Users\textbackslash{}JoÃ£o Victor\textbackslash{}AppData\textbackslash{}Local\textbackslash{}Programs\textbackslash{}MiKTeX\textbackslash{}tex/generic/gettitlestrin
+g\textbackslash{}gettitlestring.sty")) (Projeto.out) (Projeto.out)
+("C:\textbackslash{}Users\textbackslash{}JoÃ£o Victor\textbackslash{}AppData\textbackslash{}Local\textbackslash{}Programs\textbackslash{}MiKTeX\textbackslash{}tex/latex/psnfss\textbackslash{}ot1ppl.f
+d")
+("C:\textbackslash{}Users\textbackslash{}JoÃ£o Victor\textbackslash{}AppData\textbackslash{}Local\textbackslash{}Programs\textbackslash{}MiKTeX\textbackslash{}tex/latex/psnfss\textbackslash{}omlzplm.
+fd")
+("C:\textbackslash{}Users\textbackslash{}JoÃ£o Victor\textbackslash{}AppData\textbackslash{}Local\textbackslash{}Programs\textbackslash{}MiKTeX\textbackslash{}tex/latex/psnfss\textbackslash{}omszplm.
+fd")
+("C:\textbackslash{}Users\textbackslash{}JoÃ£o Victor\textbackslash{}AppData\textbackslash{}Local\textbackslash{}Programs\textbackslash{}MiKTeX\textbackslash{}tex/latex/psnfss\textbackslash{}omxzplm.
+fd")
+("C:\textbackslash{}Users\textbackslash{}JoÃ£o Victor\textbackslash{}AppData\textbackslash{}Local\textbackslash{}Programs\textbackslash{}MiKTeX\textbackslash{}tex/latex/psnfss\textbackslash{}ot1zplm.
+fd")
+("C:\textbackslash{}Users\textbackslash{}JoÃ£o Victor\textbackslash{}AppData\textbackslash{}Local\textbackslash{}Programs\textbackslash{}MiKTeX\textbackslash{}tex/latex/jknappen\textbackslash{}ursfs.
+fd")
+
+LaTeX Warning: No \textbackslash{}author given.
+
+
+LaTeX Warning: Hyper reference `1' on page 1 undefined on input line 392.
+
+
+LaTeX Warning: Hyper reference `2' on page 1 undefined on input line 392.
+
+
+LaTeX Warning: Hyper reference `wavelet' on page 1 undefined on input line 421.
+
+
+("C:\textbackslash{}Users\textbackslash{}JoÃ£o Victor\textbackslash{}AppData\textbackslash{}Local\textbackslash{}Programs\textbackslash{}MiKTeX\textbackslash{}tex/latex/base\textbackslash{}t1cmtt.fd"
+) [1\{C:/Users/JoÃ£o Victor/AppData/Local/MiKTeX/pdftex/config/pdftex.map\}]pdfTe
+X warning (ext4): destination with the same identifier (name\{metodologia\}) has
+been already used, duplicate ignored
+<to be read again>
+                   \textbackslash{}relax
+l.448 \textbackslash{}section\{Metodologia\}\textbackslash{}label\{metodologia\}\}
+
+("C:\textbackslash{}Users\textbackslash{}JoÃ£o Victor\textbackslash{}AppData\textbackslash{}Local\textbackslash{}Programs\textbackslash{}MiKTeX\textbackslash{}tex/latex/base\textbackslash{}ts1cmtt.fd
+") [2] [3]
+
+LaTeX Warning: Citation `castro\_semg\_2014' on page 4 undefined on input line 62
+5.
+
+
+("C:\textbackslash{}Users\textbackslash{}JoÃ£o Victor\textbackslash{}AppData\textbackslash{}Local\textbackslash{}Programs\textbackslash{}MiKTeX\textbackslash{}tex/latex/psnfss\textbackslash{}ts1ppl.f
+d") [4] (Projeto.aux)
+
+LaTeX Warning: There were undefined references.
+
+
+LaTeX Warning: There were multiply-defined labels.
+
+ )
+(see the transcript file for additional information) <C:\textbackslash{}Users\textbackslash{}JoÃ£o Victor\textbackslash{}App
+Data\textbackslash{}Local\textbackslash{}MiKTeX\textbackslash{}fonts/pk/ljfour/jknappen/ec/dpi600\textbackslash{}ecit1095.pk> <C:\textbackslash{}Users\textbackslash{}JoÃ
+£o Victor\textbackslash{}AppData\textbackslash{}Local\textbackslash{}MiKTeX\textbackslash{}fonts/pk/ljfour/jknappen/ec/dpi600\textbackslash{}tctt1095.pk>
+<C:\textbackslash{}Users\textbackslash{}JoÃ£o Victor\textbackslash{}AppData\textbackslash{}Local\textbackslash{}MiKTeX\textbackslash{}fonts/pk/ljfour/jknappen/ec/dpi600\textbackslash{}
+ectt1095.pk>\{C:/Users/JoÃ£o Victor/AppData/Local/Programs/MiKTeX/fonts/enc/dvip
+s/base/8r.enc\}<C:/Users/JoÃ£o Victor/AppData/Local/Programs/MiKTeX/fonts/type1/
+public/amsfonts/cm/cmmi10.pfb><C:/Users/JoÃ£o Victor/AppData/Local/Programs/MiK
+TeX/fonts/type1/public/amsfonts/cm/cmsy10.pfb><C:/Users/JoÃ£o Victor/AppData/Lo
+cal/Programs/MiKTeX/fonts/type1/urw/palatino/uplb8a.pfb><C:/Users/JoÃ£o Victor/
+AppData/Local/Programs/MiKTeX/fonts/type1/urw/palatino/uplr8a.pfb>
+Output written on Projeto.pdf (4 pages, 98650 bytes).
+Transcript written on Projeto.log.
+
+C:\textbackslash{}Dev\textbackslash{}FEI\textbackslash{}Mestrado\textbackslash{}3\_Periodo\textbackslash{}PEL301\_Biopotenciais\textbackslash{}Projeto>
+    \end{Verbatim}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+[TerminalIPythonApp] WARNING | Subcommand `ipython nbconvert` is deprecated and
+will be removed in future versions.
+[TerminalIPythonApp] WARNING | You likely want to use `jupyter nbconvert` in the
+future
+[NbConvertApp] Converting notebook Projeto.ipynb to latex
+[NbConvertApp] Writing 36448 bytes to Projeto.tex
+    \end{Verbatim}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{ }{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+
+\end{Verbatim}
+\end{tcolorbox}
+
+
+    % Add a bibliography block to the postdoc
+    
+    
+    
+\end{document}
